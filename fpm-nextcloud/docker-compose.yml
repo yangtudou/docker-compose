@@ -25,7 +25,7 @@ services:
     restart: always
     volumes:
       - nextcloud:/var/www/html
-      - $path:/var/www/html/data #这个路径是映射到本地的
+      - $path:/sj #这个路径是映射到本地的
     environment:
       - MYSQL_HOST=db
       - REDIS_HOST=redis
