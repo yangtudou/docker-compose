@@ -9,7 +9,7 @@ services:
     volumes:
       - db:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=mySQLpassworD
+      - MYSQL_ROOT_PASSWORD=ChangeMe
     env_file:
       - db.env
 
