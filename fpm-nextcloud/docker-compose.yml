@@ -41,7 +41,7 @@ services:
     container_name: nextcloud-web
     restart: always
     ports:
-      - 8080:80
+      - $web_port:80
     volumes:
       - nextcloud:/var/www/html:ro 
     depends_on:
