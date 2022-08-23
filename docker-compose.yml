@@ -1,0 +1,61 @@
+version: '3'
+
+services:
+  db:
+    image: mariadb:10.5
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    container_name: nextcloud-mariadb
+    restart: always
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=mySQLpassworD
+    env_file:
+      - db.env
+
+  redis:
+    image: redis:alpine
+    container_name: nextcloud-redis
+    restart: always
+
+  app:
+    image: nextcloud:fpm-alpine
+    container_name: nextcloud-main
+    restart: always
+    volumes:
+      - nextcloud:/var/www/html
+      - /volume1/docker/nextcloud/data:/var/www/html/data
+    environment:
+      - MYSQL_HOST=db
+      - REDIS_HOST=redis
+    env_file:
+      - db.env
+    depends_on:
+      - db
+      - redis
+
+  web:
+    build: ./web
+    container_name: nextcloud-web
+    restart: always
+    ports:
+      - 8080:80
+    volumes:
+      - /volume1/docker/nextcloud/html:/var/www/html:ro #这个路径是映射到本地的
+    depends_on:
+      - app
+
+  cron:
+    image: nextcloud:fpm-alpine
+    container_name: nextcloud-cron
+    restart: always
+    volumes:
+      - nextcloud:/var/www/html
+    entrypoint: /cron.sh
+    depends_on:
+      - db
+      - redis
+
+volumes:
+  db:
+  nextcloud:
