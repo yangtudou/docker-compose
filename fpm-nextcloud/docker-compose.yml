@@ -25,7 +25,7 @@ services:
     restart: always
     volumes:
       - nextcloud:/var/www/html
-      - $path:/sj #这个路径是映射到本地的
+      - $path:/sj #这个路径是映射到本地的,如果直接映射html文件夹，cron会失效，至少我的群晖是这样的。
     environment:
       - MYSQL_HOST=db
       - REDIS_HOST=redis
