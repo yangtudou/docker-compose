@@ -32,6 +32,9 @@ services:
       - MYSQL_PASSWORD=$MYSQL_PASSWORD
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
+      - NEXTCLOUD_TRUSTED_DOMAINS=$domains #定义受信任的域名
+      - SMTP_HOST=$SMTP_HOST #定义邮件服务器主机
+      - 
     depends_on:
       - db
       - redis
