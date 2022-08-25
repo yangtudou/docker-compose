@@ -33,6 +33,7 @@ services:
       - MYSQL_PASSWORD=$MYSQL_PASSWORD
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
+      - PHP_UPLOAD_LIMIT=$PHP_UPLOAD_LIMIT                  # 定义 php 上传文件大小。默认 512M
       ## 更改数据文件安装位置 默认是 /var/www/html/data
       # - NEXTCLOUD_DATA_DIR=$NEXTCLOUD_DATA_DIR
       - NEXTCLOUD_TRUSTED_DOMAINS=$domains                   # 定义受信任的域名,可以是多个，用空格隔开。
