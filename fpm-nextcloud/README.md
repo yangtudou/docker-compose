@@ -17,7 +17,7 @@
 | `SMTP_PORT` | 默认：SSL 为 `465`，不安全连接为25 SMTP 连接可选端口</br>使用 587 作为 STARTTLS 的备用端口。 |  |
 | `SMTP_AUTHTYPE` | 默认：`LOGIN` 用于身份验证的方法。如果不需要身份验证，请使用 PLAIN |  |
 | `SMTP_NAME` | 默认为空：smtp 身份验证的用户名 |  |
-| `SSMTP_PASSWORD` | 默认为空：smtp 身份验证的密码 |  |
+| `SMTP_PASSWORD` | 默认为空：smtp 身份验证的密码 |  |
 | `MAIL_FROM_ADDRESS` | 默认情况下未设置，邮箱 @ 之前的字段 |  |
 | `MAIL_DOMAIN` | 默认情况下未设置,就是发送邮箱的尾缀，如 qq.com |  |
 
