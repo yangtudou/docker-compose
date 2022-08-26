@@ -1,13 +1,29 @@
-# nextcloud-fpm-alpine 版本官方仓库
+# nextcloud-fpm-alpine 基于官方仓库
 主要用于群晖本地测试，没有开启 ssl 可以用反向代理开启。
 
-涉及到的变量如下
+## 支持的变量
 
-- 数据库 root 密码: $MYSQL_ROOT_PASSWORD
-- nextcloud 数据库密码: $MYSQL_PASSWORD
-- 容器与本地互通了一个文件夹（/sj）: $path
-- web 开放端口: ${web_port}
+| 变量名 | 说明 | 备注 |
+| :----: | :----: | :----: |
+| `MYSQL_ROOT_PASSWORD` | 数据库 root 密码 |  |
+| `nextcloud_main_path` | 映射本地文件夹 | 这个路径是映射到本地的</br>如果直接映射html文件夹，cron会失效</br>至少我的群晖是这样的 |
+| `web_port`| nextcloud web 映射的本地端口号 |  |
+| `MYSQL_PASSWORD` | mariadb root 密码 |  |
+| `PHP_UPLOAD_LIMIT` | 定义 php 上传文件大小。默认 `512M` |  |
+| `NEXTCLOUD_DATA_DIR` | 更改数据文件安装位置</br>默认是 `/var/www/html/data` |  |
+| `NEXTCLOUD_TRUSTED_DOMAINS` | 定义受信任的域名,可以是多个，用空格隔开 |  |
+| `SMTP_HOST` | SMTP 服务器的主机名 |  |
+| `SMTP_SECURE` | 设置为 `ssl` 以使用SSL，或设置为tls以使用STARTTLS |  |
+| `SMTP_PORT` | 默认：SSL 为 `465`，不安全连接为25 SMTP 连接可选端口</br>使用 587 作为 STARTTLS 的备用端口。 |  |
+| `SMTP_AUTHTYPE` | 默认：`LOGIN` 用于身份验证的方法。如果不需要身份验证，请使用 PLAIN |  |
+| `SMTP_NAME` | 默认为空：smtp 身份验证的用户名 |  |
+| `SSMTP_PASSWORD` | 默认为空：smtp 身份验证的密码 |  |
+| `MAIL_FROM_ADDRESS` | 默认情况下未设置，邮箱 @ 之前的字段 |  |
+| `MAIL_DOMAIN` | 默认情况下未设置,就是发送邮箱的尾缀，如 qq.com |  |
 
+
+
+---
 
 # 这样部署的 nextcloud 会遇到的问题和解决方案
 
