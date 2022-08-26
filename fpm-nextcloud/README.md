@@ -6,7 +6,7 @@
 | 变量名 | 说明 | 备注 |
 | :----: | :----: | :----: |
 | `MYSQL_ROOT_PASSWORD` | 数据库 root 密码 |  |
-| `nextcloud_main_path` | 映射本地文件夹 | 这个路径是映射到本地的</br>如果直接映射html文件夹，cron会失效</br>至少我的群晖是这样的 |
+| `nextcloud_main_path` | 映射容器 nextcloud——main 本地文件夹 | 这个路径是映射到本地的</br>如果直接映射html文件夹，cron会失效</br>至少我的群晖是这样的 |
 | `web_port`| nextcloud web 映射的本地端口号 |  |
 | `MYSQL_PASSWORD` | mariadb root 密码 |  |
 | `PHP_UPLOAD_LIMIT` | 定义 php 上传文件大小。默认 `512M` |  |
