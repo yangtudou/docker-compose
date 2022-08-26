@@ -25,27 +25,24 @@ services:
     restart: always
     volumes:
       - nextcloud:/var/www/html
-      # 这个路径是映射到本地的,如果直接映射html文件夹，cron会失效，至少我的群晖是这样的。
-      - $path:/nextcloud_data
+      - ${nextcloud_main_path}:/nextcloud_data
     environment:
       - MYSQL_HOST=db
       - REDIS_HOST=redis
       - MYSQL_PASSWORD=$MYSQL_PASSWORD
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
-      - PHP_UPLOAD_LIMIT=$PHP_UPLOAD_LIMIT                  # 定义 php 上传文件大小。默认 512M
-      ## 更改数据文件安装位置 默认是 /var/www/html/data
+      - PHP_UPLOAD_LIMIT=$PHP_UPLOAD_LIMIT
       # - NEXTCLOUD_DATA_DIR=$NEXTCLOUD_DATA_DIR
-      - NEXTCLOUD_TRUSTED_DOMAINS=$domains                   # 定义受信任的域名,可以是多个，用空格隔开。
-      ## 这里不用的话就注释掉,或者直接不填写。我自用的话就全打开了。
-      - SMTP_HOST=$SMTP_HOST                                 # SMTP服务器的主机名
-      - SMTP_SECURE=$SMTP_SECURE                             # 设置为ssl以使用SSL，或设置为tls以使用STARTTLS
-      - SMTP_PORT=$SMTP_PORT                                 # 默认：SSL 为 465，不安全连接为25 , SMTP 连接可选端口。使用 587 作为 STARTTLS 的备用端口。
-      - SMTP_AUTHTYPE=$SMTP_AUTHTYPE                         # 默认：LOGIN 用于身份验证的方法。如果不需要身份验证，请使用 PLAIN。
-      - SMTP_NAME=$SMTP_NAME                                 # 默认为空：smtp 身份验证的用户名。
-      - SMTP_PASSWORD=$SMTP_PASSWORD                         # 默认为空：smtp 身份验证的密码。
-      - MAIL_FROM_ADDRESS=$MAIL_FROM_ADDRESS                 # 默认情况下未设置，邮箱 @ 之前的字段
-      - MAIL_DOMAIN=$MAIL_DOMAIN                             # 默认情况下未设置,就是发送邮箱的尾缀，如 qq.com
+      - NEXTCLOUD_TRUSTED_DOMAINS=$NEXTCLOUD_TRUSTED_DOMAINS
+      - SMTP_HOST=$SMTP_HOST
+      - SMTP_SECURE=$SMTP_SECURE
+      - SMTP_PORT=$SMTP_PORT
+      - SMTP_AUTHTYPE=$SMTP_AUTHTYPE
+      - SMTP_NAME=$SMTP_NAME
+      - SMTP_PASSWORD=$SMTP_PASSWORD
+      - MAIL_FROM_ADDRESS=$MAIL_FROM_ADDRESS
+      - MAIL_DOMAIN=$MAIL_DOMAIN
     depends_on:
       - db
       - redis
