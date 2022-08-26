@@ -20,7 +20,7 @@ services:
     restart: always
 
   app:
-    build: ./nextcloud-alpine
+    build: ./nextcloud
     container_name: nextcloud-main
     restart: always
     volumes:
@@ -59,7 +59,7 @@ services:
       - app
 
   cron:
-    build: ./nextcloud-alpine
+    build: ./nextcloud
     container_name: nextcloud-cron
     restart: always
     volumes:
