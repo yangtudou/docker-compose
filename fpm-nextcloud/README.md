@@ -30,19 +30,3 @@
 ```
 'check_for_working_wellknown_setup' => false,
 ```
-
-- ❓ 此实例中的 php-imagick 模块不支持 SVG
-
-这个我看官方仓库里全是吐槽，解决方法是进到 nextcloud 主程序的容器里，然后：
-
-#### 这里我是怕出错替换了源
-```
-sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
-```
-```
-apk add --no-cache imagemagick
-```
-
-其他问题，什么邮箱什么的，都不是什么大问题，一搜一大堆解决。
-
-可以能回想解决一下上面遇到的问题能在部署的时候一次性解决
