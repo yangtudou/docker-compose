@@ -10,7 +10,7 @@
 | `web_port`| nextcloud web 映射的本地端口号 |  |
 | `MYSQL_PASSWORD` | mariadb root 密码 |  |
 | `PHP_UPLOAD_LIMIT` | 定义 php 上传文件大小。默认 `512M` |  |
-| `NEXTCLOUD_DATA_DIR` | 更改数据文件安装位置</br>默认是 `/var/www/html/data` |  |
+| `NEXTCLOUD_DATA_DIR` | 更改数据文件安装位置</br>默认是 `/var/www/html/data` | 配置文件里注释掉了，要使用请打开  |
 | `NEXTCLOUD_TRUSTED_DOMAINS` | 定义受信任的域名,可以是多个，用空格隔开 |  |
 | `SMTP_HOST` | SMTP 服务器的主机名 |  |
 | `SMTP_SECURE` | 设置为 `ssl` 以使用SSL，或设置为tls以使用STARTTLS |  |
