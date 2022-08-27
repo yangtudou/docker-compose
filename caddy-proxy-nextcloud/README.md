@@ -1,7 +1,7 @@
 # 用 caddy 反向代理 nextcloud
- 利用 dns 的方式自动生成证书，开启 https ，前提是 ddns 到域名。我用的是腾讯云，群晖自带的 ddns
-<img src="https://cdn.rawgit.com/nextcloud/docker/80dd587d847b184ba95d7187a2a7a56ae4cbbb7b/logo.svg" alt="Caddy" style="height: 15vh;max-width: 100%;">
-<img src="https://user-images.githubusercontent.com/1128849/36338535-05fb646a-136f-11e8-987b-e6901e717d5a.png" alt="Caddy" style="height: 5vh;max-width: 100%;">
+利用 dns 的方式自动生成证书，开启 https ，前提是 ddns 到域名。我用的是腾讯云，群晖自带的 ddns
+ 
+ 
 ## 目前支持的变量
 
 | **变量名** | **说明** |
