@@ -13,11 +13,15 @@ services:
       - MYSQL_PASSWORD=$NEXTCLOUD_MYSQL_PASSWORD
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
+    networks:
+      - nextcloud
 
   redis:
     image: redis:alpine
     container_name: nextcloud-redis
     restart: always
+    networks:
+      - nextcloud
 
   app:
     build: ./nextcloud
@@ -33,7 +37,7 @@ services:
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
       - PHP_UPLOAD_LIMIT=$PHP_UPLOAD_LIMIT
-      # - NEXTCLOUD_DATA_DIR=$NEXTCLOUD_DATA_DIR
+      - NEXTCLOUD_DATA_DIR=$NEXTCLOUD_DATA_DIR
       - NEXTCLOUD_TRUSTED_DOMAINS=$NEXTCLOUD_TRUSTED_DOMAINS
       - SMTP_HOST=$SMTP_HOST
       - SMTP_SECURE=$SMTP_SECURE
@@ -43,18 +47,23 @@ services:
       - SMTP_PASSWORD=$SMTP_PASSWORD
       - MAIL_FROM_ADDRESS=$MAIL_FROM_ADDRESS
       - MAIL_DOMAIN=$MAIL_DOMAIN
+    networks:
+      - nextcloud
     depends_on:
       - db
       - redis
 
-  web:
-    build: ./web
+  nginx:
+    build: ./nginx
     container_name: nextcloud-web
     restart: always
-    ports:
-      - ${local_port}:80
     volumes:
-      - nextcloud:/var/www/html:ro 
+      - nextcloud:/var/www/html:ro
+    ports:
+      - ${loacl_port}:80
+    networks:
+      - caddy
+      - nextcloud
     depends_on:
       - app
 
@@ -65,13 +74,36 @@ services:
     volumes:
       - nextcloud:/var/www/html
     entrypoint: /cron.sh
+    networks:
+      - nextcloud
     depends_on:
       - db
       - redis
 
+  web:
+    #image: ./caddy-dnspodcn
+    image: yangtudou/caddy-dnspodcn
+    container_name: caddy-proxy
+    ports:
+      - ${proxy_https_port}:${proxy_https_port}
+      - ${proxy_http_port}:${proxy_http_port}
+    networks:
+      - caddy
+      - nextcloud
+    volumes:
+      - $loacl_certs:/certs
+      - $caddy_caddyfile:/etc/caddy
+      - $caddy_data:/data
+      - $caddy_config:/config
+    restart: unless-stopped
+    depends_on:
+      - nginx
+
 volumes:
   db:
   nextcloud:
-  
+
 networks:
   nextcloud:
+  caddy:
+    external: true
