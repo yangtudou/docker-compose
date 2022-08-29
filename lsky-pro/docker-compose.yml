@@ -10,9 +10,9 @@ services:
       - db:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
-      - MYSQL_PASSWORD=$LSKY_PRO_MYSQL_PASSWORD
       - MYSQL_DATABASE=lsky_pro
       - MYSQL_USER=lsky_pro
+      - MYSQL_PASSWORD=$LSKY_PRO_MYSQL_PASSWORD
 
   app:
     image: yangtudou/lsky-pro
@@ -22,6 +22,11 @@ services:
       - ${local_port}:80
     volumes:
       - lsky-pro:/var/www/html
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_DATABASE=lsky_pro
+      - MYSQL_USER=lsky_pro
+      - MYSQL_PASSWORD=$LSKY_PRO_MYSQL_PASSWORD
     depends_on:
       - db
 

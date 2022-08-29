@@ -1,4 +1,5 @@
 FROM php:8.1-apache-buster
+LABEL image.author="yangtudou"
 
 ENV PHP_UPLOAD_LIMIT=100M
 ENV PHP_MEMORY_LIMIT=512M
@@ -51,14 +52,15 @@ RUN { \
 
 VOLUME /var/www/html
 # 下载文件整理
-ENV LSKY_PRO_VERSION=2.1
+ARG LSKY_PRO_VERSION=2.1
 RUN curl -fsSL -o /var/www/html/lsky-pro.zip https://github.com/lsky-org/lsky-pro/releases/download/$LSKY_PRO_VERSION/lsky-pro-$LSKY_PRO_VERSION.zip \
     && unzip /var/www/html/lsky-pro.zip \
     && rm lsky-pro.zip \
     && mkdir /var/www/data \
     && chown -R www-data:root /var/www \
-    && chmod -R g=u /var/www \
-    && sed -i 's/html/html\/public/g' /etc/apache2/sites-enabled/000-default.conf
+    && chmod -R g=u /var/www
 
+COPY --chown=root:root entrypoint.sh /
+ENTRYPOINT ["sh", "/entrypoint.sh"]
 CMD ["apache2-foreground"]
 
