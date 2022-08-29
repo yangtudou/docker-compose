@@ -8,7 +8,7 @@
 | MYSQL_ROOT_PASSWORD | MySQL root 密码 |
 | MYSQL_DATABASE | MySQL 自动创建的数据库名 |
 | MYSQL_USER | MySQL 自动创建的用户名 |
-| MYSQL_PASSWORD | MySQL 自动创建的用户的密码 |
+| LSKY_PRO_MYSQL_PASSWORD | MySQL 自动创建的用户的密码 |
 | MYSQL_HOST | MySQL 数据库地址 |
 | local_port | 映射本地端口号 |
 
