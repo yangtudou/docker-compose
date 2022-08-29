@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    container_name: lsky-pro-mysql
+    restart: always
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+      - MYSQL_PASSWORD=$LSKY_PRO_MYSQL_PASSWORD
+      - MYSQL_DATABASE=lsky_pro
+      - MYSQL_USER=lsky_pro
+
+  app:
+    image: yangtudou/lsky-pro
+    container_name: lsky-pro
+    restart: always
+    ports:
+      - ${local_port}:80
+    volumes:
+      - lsky-pro:/var/www/html
+    depends_on:
+      - db
+
+volumes:
+  db:
+  lsky-pro:
+  
+networks:
+  lsky-pro:

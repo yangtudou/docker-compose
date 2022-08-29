@@ -1,2 +1,2 @@
-# 主要用于和 portainer 联动
-目前在完善的是 nextcloud ，用于局域网内 ddns 后访问。
+# 主要用于和 docker portainer 联动
+用于群晖 docker 部署，不用开启 ssh 用代码来部署，如 docker-compose 等，通过拉取远程仓库填写参数就行。

@@ -1,6 +1,25 @@
-# 用 caddy 反向代理 nextcloud
-利用 dns 的方式自动生成证书，开启 https ，前提是 ddns 到域名。我用的是腾讯云，群晖自带的 ddns
- 
+# 群晖用 caddy 反向代理 nextcloud
+
+内网，利用 dns 的方式自动生成证书，开启 https 
+
+**需要**
+- ddns 绑定到域名，可以使用群晖自带
+- caddy 配置文件要写好 主要是 dnspodcn 模块要添加。
+
+Caddyfile 配置文件参考：
+```
+(dnspodcn) {
+    tls {
+        dns dnspodcn $id $token
+    }
+}
+$domains:$port {
+    file_server
+    header Strict-Transport-Security max-age=31536000;
+    reverse_proxy $loaclhost:$port
+    import dnspodcn
+}
+```
  
 ## 目前支持的变量
 
@@ -40,4 +59,11 @@
 往 `config.php` 配置文件里增加一行，这里的 `192.168.1.1` 取决于你的网关
 ```
 'trusted_proxies'   => ['192.168.1.1'],
+```
+
+- ⚠️ 设置里网址不显示 https
+
+往 `config.php` 配置文件里增加一行
+```
+'overwriteprotocol' => 'https', 
 ```

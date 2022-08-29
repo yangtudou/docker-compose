@@ -1,5 +1,9 @@
 # nextcloud-fpm-alpine 基于官方仓库
-主要用于群晖本地测试，没有开启 ssl 可以用反向代理开启。
+
+### 主要用于群晖本地调试，后期可以用反向代理开启 tls
+我自己是用群晖自带的反向代理，挺好用的。（记得钩上 HSTS ）
+
+这个仓库里还有一个用 caddy 官方的镜像做反向代理的方式，可以参考。
 
 ## 支持的变量
 
@@ -22,11 +26,18 @@
 | `MAIL_DOMAIN` | 默认情况下未设置,就是发送邮箱的尾缀，如 qq.com |  |
 
 
-# 这样部署的 nextcloud 会遇到的问题和解决方案
+# 这样部署的 nextcloud 可能会遇到的问题和解决方案
 
 - ❓ 未正确设置以解析“/.well-known/*
 
 目前无解，不过不影响使用，如果看这个烦可以在配置文件里添加：
 ```
 'check_for_working_wellknown_setup' => false,
+```
+
+- ⚠️ 设置里网址不显示 https
+
+往 `config.php` 配置文件里增加一行
+```
+'overwriteprotocol' => 'https', 
 ```
