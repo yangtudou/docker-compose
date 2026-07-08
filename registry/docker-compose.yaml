@@ -1,0 +1,47 @@
+services:
+
+  registry:
+    image: registry:3
+    container_name: registry
+    restart: unless-stopped
+
+    expose:
+      - "5000"
+
+    volumes:
+      - ./config.yaml:/etc/distribution/config.yaml:ro
+      - ./data:/var/lib/registry
+
+    networks:
+      - homelab
+
+  registry-ui:
+    image: joxit/docker-registry-ui:main
+    container_name: registry-ui
+    restart: unless-stopped
+
+    expose:
+      - "80"
+
+    depends_on:
+      - registry
+
+    environment:
+      SINGLE_REGISTRY: "true"
+      REGISTRY_TITLE: "yyysay's Docker Registry"
+      DELETE_IMAGES: "true"
+      SHOW_CONTENT_DIGEST: "true"
+      SHOW_CATALOG_NB_TAGS: "true"
+      CATALOG_MIN_BRANCHES: "1"
+      CATALOG_MAX_BRANCHES: "1"
+      TAGLIST_PAGE_SIZE: "100"
+      CATALOG_ELEMENTS_LIMIT: "1000"
+      REGISTRY_SECURED: "false"
+      NGINX_PROXY_PASS_URL: "http://registry:5000"
+
+    networks:
+      - homelab-net
+
+networks:
+  homelab-net:
+    external: true
