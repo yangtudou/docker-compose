@@ -1,0 +1,25 @@
+name: Test Tailscale Path
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check-connection:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+
+      - name: Path Diagnosis
+        run: |
+          TARGET_IP="100.100.114.114" 
+          
+          echo ">>> 正在检测到目标 $TARGET_IP 的网络路径..."
+          
+          echo "--- tailscale status 概览 ---"
+          tailscale status | grep "$TARGET_IP"
+          
+          echo "--- tailscale ping 路径追踪 ---"
+          tailscale ping -c 4 -v $TARGET_IP
