@@ -23,7 +23,9 @@ jobs:
     - name: Run Crane Copy
       timeout-minutes: 30
       run: |
+        IMAGE_NAME="ghcr.io/shadowsocks/ssserver-rust:v1.24.0"
+        
         crane copy --platform linux/amd64 \
           --jobs 1 \
-          cloudflare/cloudflared:latest \
-          ${{ secrets.DOCKERHUB_PATH }}/cloudflare/cloudflared:latest
+          $IMAGE_NAME \
+          ${{ secrets.DOCKERHUB_PATH }}/$IMAGE_NAME
