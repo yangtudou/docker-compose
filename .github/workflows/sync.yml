@@ -1,0 +1,26 @@
+name: 🚀 Tailscale 内网连通性盲测
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-connection:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. 直接用上最新、更快的 v4 版本
+    - name: Connect to Tailscale
+      uses: tailscale/github-action@v4
+      with:
+        authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+
+    # 2. 看看拿到了啥内网 IP
+    - name: Check My Tailscale IP
+      run: |
+        tailscale ip -4
+
+    # 3. 终极测试：隔空 Ping 你的绿联 NAS
+    - name: Ping UGNAS
+      run: |
+        # 【注意】记得把下方的 100.x.x.x 换成你绿联 NAS 的 Tailscale 实际内网 IP
+        ping -c 4 100.x.x.x
