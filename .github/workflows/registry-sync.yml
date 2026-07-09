@@ -11,16 +11,11 @@ jobs:
     - name: Connect to Tailscale
       uses: tailscale/github-action@v4
       with:
-        authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+        oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+        oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+        tags: tag:ci
         ping: ug-dxp2800pro
 
-    - name: Check Registry Health
-      uses: jtalk/url-health-check-action@v5
-      with:
-        url: https://registry.local.y3-3am.top/v2/
-        allowed-status-codes: 200
-        timeout: 3
-        max-attempts: 1
 
     - name: Setup Crane
       uses: imjasonh/setup-crane@v0.7
@@ -31,4 +26,4 @@ jobs:
         crane copy --platform linux/amd64 \
           --jobs 1 \
           cloudflare/cloudflared:latest \
-          registry.local.y3-3am.top/cloudflare/cloudflared:latest
+          ${{ secrets.DOCKERHUB_PATH }}/cloudflare/cloudflared:latest
