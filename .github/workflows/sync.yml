@@ -1,4 +1,4 @@
-name: 🐋 隔空搬运 Forgejo 镜像到绿联 NAS
+name: registry sync
 
 on:
   workflow_dispatch:
@@ -6,17 +6,30 @@ on:
 jobs:
   sync-image:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
     - name: Connect to Tailscale
       uses: tailscale/github-action@v4
       with:
         authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+        tags: tag:ci
+
+    - name: Check Registry Health
+      run: |
+        echo "尝试连接内网 Docker 私有仓库..."
+        if curl --fail -sS -I https://registry.local.y3-3am.top/v2/; then
+          echo "✅ 仓库健康体检通过！正在放行搬运任务..."
+        else
+          echo "❌ 错误，取消任务"
+          exit 1
+        fi
 
     - name: Setup Crane
-      uses: imjasonh/setup-crane@v0.3
+      uses: imjasonh/setup-crane@v0.7
 
     - name: Run Crane Copy
+      timeout-minutes: 10
       run: |
         crane copy --platform linux/amd64 \
           codeberg.org/forgejo/forgejo:15 \
