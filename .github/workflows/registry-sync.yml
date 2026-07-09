@@ -14,7 +14,7 @@ jobs:
     - name: Run Crane Copy
       timeout-minutes: 30
       run: |     
-        IMAGE_NAME="jellyfin/jellyfin:latest"
+        IMAGE_NAME="ghcr.io/jellyfin/jellyfin:latest"
 
         crane copy --platform linux/amd64 \
           $IMAGE_NAME \
