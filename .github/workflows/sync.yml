@@ -29,5 +29,5 @@ jobs:
       timeout-minutes: 10
       run: |
         crane copy --platform linux/amd64 \
-          neosmemo/memos:latest \
-          registry.local.y3-3am.top/neosmemo/memos:latest
+          cloudflare/cloudflared:latest \
+          registry.local.y3-3am.top/cloudflare/cloudflared:latest
