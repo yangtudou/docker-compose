@@ -13,7 +13,6 @@ jobs:
       uses: tailscale/github-action@v4
       with:
         authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-        tags: tag:ci
 
     - name: Check Registry Health
       uses: jtalk/url-health-check-action@v5
@@ -30,5 +29,5 @@ jobs:
       timeout-minutes: 10
       run: |
         crane copy --platform linux/amd64 \
-          codeberg.org/forgejo/forgejo:15 \
-          registry.local.y3-3am.top/codeberg.org/forgejo/forgejo:15
+          neosmemo/memos:latest \
+          registry.local.y3-3am.top/neosmemo/memos:latest
