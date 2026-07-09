@@ -22,19 +22,10 @@ jobs:
 
     - name: Run Crane Copy
       timeout-minutes: 30
-      run: |
-        IMAGE_NAME="ssserver-rust"
-        IMAGE_NAME_PATH="ghcr.io/shadowsocks/ssserver-rust:v1.24.0"
+      run: |     
+        IMAGE_NAME="ghcr.io/shadowsocks/ssserver-rust:v1.24.0"
 
-        echo "📦 正在从 GHCR 导出镜像..."
-        crane export $IMAGE_NAME_PATH $IMAGE_NAME.tar
-
-        echo "🗜️ 正在进行高比例压缩..."
-        # 加上 -v 可以看到压缩进度和压缩率，调试更爽
-        gzip -v $IMAGE_NAME.tar 
-
-        echo "🚀 正在通过 WebDAV 单流推回内网..."
-        # 注意：这里 -T 后面必须是 .tar.gz 了
-        curl -v --fail -T $IMAGE_NAME.tar.gz \
-          -u "${{ secrets.WEBDAV_USER }}:${{ secrets.WEBDAV_PASSWORD }}" \
-          "https://webdav.local.y3-3am.top/AV/$IMAGE_NAME.tar.gz"
+        crane copy --platform linux/amd64 \
+          --jobs 1 \
+          $IMAGE_NAME \
+          ${{ secrets.DOCKERHUB_PATH }}/$IMAGE_NAME
