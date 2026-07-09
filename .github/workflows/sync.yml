@@ -1,26 +1,23 @@
-name: 🚀 Tailscale 内网连通性盲测
+name: 🐋 隔空搬运 Forgejo 镜像到绿联 NAS
 
 on:
   workflow_dispatch:
 
 jobs:
-  test-connection:
+  sync-image:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. 直接用上最新、更快的 v4 版本
     - name: Connect to Tailscale
       uses: tailscale/github-action@v4
       with:
         authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-        tags: tag:ci
 
-    # 2. 看看拿到了啥内网 IP
-    - name: Check My Tailscale IP
-      run: |
-        tailscale ip -4
+    - name: Setup Crane
+      uses: imjasonh/setup-crane@v0.3
 
-    # 3. 终极测试：隔空 Ping 你的绿联 NAS
-    - name: Ping UGNAS
+    - name: Run Crane Copy
       run: |
-        ping -c 4 100.100.114.114
+        crane copy --platform linux/amd64 \
+          codeberg.org/forgejo/forgejo:15 \
+          registry.local.y3-3am.top/codeberg.org/forgejo/forgejo:15
