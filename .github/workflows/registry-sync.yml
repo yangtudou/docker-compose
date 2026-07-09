@@ -14,12 +14,12 @@ jobs:
 
       - name: Path Diagnosis
         run: |
-          TARGET_IP="100.100.114.114" 
+          TARGET_IP="100.100.114.114"
           
           echo ">>> 正在检测到目标 $TARGET_IP 的网络路径..."
           
           echo "--- tailscale status 概览 ---"
-          tailscale status | grep "$TARGET_IP"
+          tailscale status | grep "$TARGET_IP" || echo "未能在状态列表中过滤到该IP"
           
           echo "--- tailscale ping 路径追踪 ---"
-          tailscale ping -c 4 -v $TARGET_IP
+          tailscale ping --c 4 --verbose $TARGET_IP
