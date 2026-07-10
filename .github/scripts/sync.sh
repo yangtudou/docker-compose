@@ -36,10 +36,10 @@ while IFS= read -r src || [[ -n "$src" ]]; do
         "$src" \
         "$dst"
     then
-        ((success++))
+        ((++success))
         echo "✅ Success"
     else
-        ((failed++))
+        ((++failed))
         echo "❌ Failed"
     fi
 
@@ -53,4 +53,11 @@ echo " Success : $success"
 echo " Failed  : $failed"
 echo "========================================"
 
-(( failed == 0 ))
+if (( failed > 0 )); then
+    echo "❌ ${failed} image(s) failed to sync."
+    echo "========================================"
+    exit 1
+fi
+
+echo "🎉 All images synced successfully."
+echo "========================================"
