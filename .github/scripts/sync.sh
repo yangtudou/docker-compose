@@ -5,6 +5,7 @@ set -Eeuo pipefail
 readonly PLATFORM="${PLATFORM:-linux/amd64}"
 readonly REGISTRY="${ALIYUN_REGISTRY_DOMAIN}"
 readonly NAMESPACE="${ALIYUN_REGISTRY_SPACE_NAME}"
+readonly TOTAL=$(grep -Ec '^[[:space:]]*[^#[:space:]]' images.txt)
 
 success=0
 failed=0
@@ -28,13 +29,14 @@ while IFS= read -r src || [[ -n "$src" ]]; do
 
     echo
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "📦 Source : $src"
+    echo "📦 [$((success + failed + 1))/$TOTAL] Source : $src"
     echo "🎯 Target : $dst"
 
     if crane copy \
         --platform "$PLATFORM" \
         "$src" \
-        "$dst"
+        "$dst" \
+        >/dev/null 2>&1
     then
         ((++success))
         echo "✅ Success"
@@ -43,7 +45,7 @@ while IFS= read -r src || [[ -n "$src" ]]; do
         echo "❌ Failed"
     fi
 
-done < images.txt
+done < "images.txt"
 
 echo
 echo "========================================"
