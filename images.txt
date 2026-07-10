@@ -3,3 +3,16 @@
 
 cloudflare/cloudflared:latest
 tailscale/tailscale:stable
+finab/bark-server:latest
+
+gdy666/lucky:v2
+neosmemo/memos:0.27.1
+metacubex/mihomo:latest
+
+ghcr.io/hacdias/webdav:latest
+ghcr.io/sagernet/sing-box:latest
+ghcr.io/sagernet/sing-box:latest-testing
+ghcr.io/shadowsocks/ssserver-rust:latest
+
+
+vaultwarden/server:latest
