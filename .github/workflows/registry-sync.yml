@@ -1,4 +1,4 @@
-name: Docker Speed and Stats
+name: Docker Speed Mini
 
 on:
   workflow_dispatch:
@@ -8,54 +8,52 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: 1. 准备测试镜像 (约 30MB)
+    - name: 1. 准备微型测试镜像 (约 1.2MB)
       run: |
-        echo "=== 正在从官方拉取 30MB 的 ubuntu 镜像 ==="
-        docker pull ubuntu:24.04
-        docker tag ubuntu:24.04 ${{ secrets.DOCKERHUB_PATH }}/speed-test:latest
+        echo "=== 正在拉取 busybox ==="
+        docker pull busybox:latest
+        docker tag busybox:latest ${{ secrets.DOCKERHUB_PATH }}/mini-test:latest
 
     - name: 2. 测试【上传速度】(Docker Push)
       run: |
-        TARGET="${{ secrets.DOCKERHUB_PATH }}/speed-test:latest"
-        echo "=== 开始 PUSH 到你的私有仓 ==="
+        TARGET="${{ secrets.DOCKERHUB_PATH }}/mini-test:latest"
+        echo "=== 开始 PUSH 1.2MB 数据 ==="
         
-        START_TIME=$(date +%s)
+        START_TIME=$(date +%s.%N)
         docker push $TARGET
-        END_TIME=$(date +%s)
+        END_TIME=$(date +%s.%N)
         
-        DURATION=$((END_TIME - START_TIME))
-        if [ $DURATION -eq 0 ]; then DURATION=1; fi # 防止除以 0
+        # 计算精确到毫秒的时间差
+        DURATION=$(echo "$END_TIME - $START_TIME" | bc)
         
-        # ubuntu:24.04 压缩后上传体积约为 30MB
-        SPEED_MB=$(echo "scale=2; 30 / $DURATION" | bc)
-        SPEED_MBPS=$(echo "scale=2; $SPEED_MB * 8" | bc)
+        # 1.2MB 大约等于 1228 KB
+        SPEED_KB=$(echo "scale=2; 1228 / $DURATION" | bc)
+        SPEED_MBPS=$(echo "scale=2; $SPEED_KB * 8 / 1024" | bc)
         
         echo "====================================="
         echo " 上传耗时: $DURATION 秒"
-        echo " 平均上传速度: $SPEED_MB MB/s"
-        echo " 相当于宽带上行: $SPEED_MBPS Mbps (兆位/秒)"
+        echo " 平均上传速度: $SPEED_KB KB/s"
+        echo " 相当于宽带上行: $SPEED_MBPS Mbps"
         echo "====================================="
 
     - name: 3. 测试【下载速度】(Docker Pull)
       run: |
-        TARGET="${{ secrets.DOCKERHUB_PATH }}/speed-test:latest"
+        TARGET="${{ secrets.DOCKERHUB_PATH }}/mini-test:latest"
         echo "=== 清理本地缓存 ==="
         docker rmi $TARGET || true
-        docker rmi ubuntu:24.04 || true
+        docker rmi busybox:latest || true
         
         echo "=== 开始从你的私有仓 PULL ==="
-        START_TIME=$(date +%s)
+        START_TIME=$(date +%s.%N)
         docker pull $TARGET
-        END_TIME=$(date +%s)
+        END_TIME=$(date +%s.%N)
         
-        DURATION=$((END_TIME - START_TIME))
-        if [ $DURATION -eq 0 ]; then DURATION=1; fi
-        
-        SPEED_MB=$(echo "scale=2; 30 / $DURATION" | bc)
-        SPEED_MBPS=$(echo "scale=2; $SPEED_MB * 8" | bc)
+        DURATION=$(echo "$END_TIME - $START_TIME" | bc)
+        SPEED_KB=$(echo "scale=2; 1228 / $DURATION" | bc)
+        SPEED_MBPS=$(echo "scale=2; $SPEED_KB * 8 / 1024" | bc)
         
         echo "====================================="
         echo " 下载耗时: $DURATION 秒"
-        echo " 平均下载速度: $SPEED_MB MB/s"
-        echo " 相当于网络下行: $SPEED_MBPS Mbps (兆位/秒)"
+        echo " 平均下载速度: $SPEED_KB KB/s"
+        echo " 相当于网络下行: $SPEED_MBPS Mbps"
         echo "====================================="
