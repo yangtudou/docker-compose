@@ -43,7 +43,7 @@ while IFS= read -r src || [[ -n "$src" ]]; do
         echo "❌ Failed"
     fi
 
-done < .github/images.txt
+done < images.txt
 
 echo
 echo "========================================"
