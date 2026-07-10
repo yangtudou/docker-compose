@@ -1,0 +1,12 @@
+address: 0.0.0.0
+port: 80           # 改成 80，在 Docker 内部看着顺眼
+behindProxy: true  # 握手 Lucky
+directory: /data   # 对应你挂载的电影目录
+permissions: R     # 默认只读
+cors:
+  enabled: true    # 喂饱 VidHub
+
+users:
+  - username: "webdav"
+    # docker run --rm ghcr.io/hacdias/webdav:latest bcrypt "<明文密码>"
+    password: ${PASSWORD}
