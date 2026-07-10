@@ -10,16 +10,52 @@ jobs:
     - name: 安装高级同步工具 Crane
       uses: imjasonh/setup-crane@v0.7
 
-    - name: 闷声发大财，秒传镜像
+    - name: 闷声发大财，多镜像容错秒传
       run: |
-        SRC_IMAGE="cloudflare/cloudflared:latest"
-        
-        # 1. 纯内存变量提取，绝不在日志打印
-        BASE_NAME="${SRC_IMAGE##*/}"
-        IMAGE_NAME="${BASE_NAME%%:*}"
-        IMAGE_TAG="${BASE_NAME#*:}"
-        [ "$BASE_NAME" = "$IMAGE_TAG" ] && IMAGE_TAG="latest"
-        
+        # 1. 登录
         crane auth login "${{ secrets.ALIYUN_REGISTRY_DOMAIN }}" -u "${{ secrets.ALIYUN_USERNAME }}" -p "${{ secrets.ALIYUN_PASSWORD }}"
-        crane copy --platform linux/amd64 \
-          "$SRC_IMAGE" "${{ secrets.ALIYUN_REGISTRY_DOMAIN }}/${{ secrets.ALIYUN_REGISTRY_SPACE_NAME }}/${IMAGE_NAME}:${IMAGE_TAG}"
+        
+        # 2. 镜像列表
+        IMAGES=(
+          "cloudflare/cloudflared:latest"
+          "tailscale/tailscale:stable"
+        )
+        
+        # 初始化一个失败计数器
+        SYNC_FAILED=0
+        
+        # 3. 开始循环
+        for SRC_IMAGE in "${IMAGES[@]}"; do
+          
+          # 纯内存变量提取
+          BASE_NAME="${SRC_IMAGE##*/}"
+          IMAGE_NAME="${BASE_NAME%%:*}"
+          IMAGE_TAG="${BASE_NAME#*:}"
+          [ "$BASE_NAME" = "$IMAGE_TAG" ] && IMAGE_TAG="latest"
+          
+          echo ">>> [Start] 正在同步: $SRC_IMAGE"
+          
+          # 用 if ! 包裹命令，即便失败了也不会触发 GitHub Actions 的退出机制
+          if ! crane copy --platform linux/amd64 \
+            "$SRC_IMAGE" "${{ secrets.ALIYUN_REGISTRY_DOMAIN }}/${{ secrets.ALIYUN_REGISTRY_SPACE_NAME }}/${IMAGE_NAME}:${IMAGE_TAG}"; then
+            
+            echo "❌ [ERROR] 这个镜像同步失败了: $SRC_IMAGE"
+            SYNC_FAILED=1  # 记个账
+          else
+            echo "   [SUCCESS] 同步成功！"
+          fi
+          
+          echo "----------------------------------------"
+        done
+        
+        # 4. 统一算账
+        if [ "$SYNC_FAILED" -ne 0 ]; then
+          echo "========================================"
+          echo "⚠️ 警告：部分镜像同步失败，请向上滚动查看红字日志！"
+          echo "========================================"
+          exit 1 # 让 GitHub Actions 最终亮红灯，提醒你来检查
+        else
+          echo "========================================"
+          echo "🎉 恭喜！所有镜像全部完美同步完成！"
+          echo "========================================"
+        fi
