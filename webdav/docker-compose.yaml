@@ -1,0 +1,23 @@
+services:
+  docker-webdav:
+    image: ghcr.io/hacdias/webdav:latest
+    container_name: docker-webdav
+    restart: unless-stopped
+        
+    expose:
+      - 80
+
+    volumes:
+      - /volume2/Video:/data:ro         # 你的电影盘，依旧只读保护
+      - ./config.yaml:/config.yaml:ro   # 配置文件,联动下面的 command 部分
+
+    command:
+      - -c
+      - /config.yaml
+        
+    networks:
+      - homelab-net
+
+networks:
+  homelab-net:
+    external: true
