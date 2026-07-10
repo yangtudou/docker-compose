@@ -1,0 +1,5 @@
+# 每行一个镜像
+# 空行和 # 开头会自动忽略
+
+cloudflare/cloudflared:latest
+tailscale/tailscale:stable
