@@ -1,21 +1,52 @@
-name: registry sync
+name: Network Test
 
 on:
   workflow_dispatch:
 
 jobs:
-  sync-image:
+  network-test:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Setup Crane
-      uses: imjasonh/setup-crane@v0.7
+    - name: 安装网络诊断工具
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y mtr curl
 
-    - name: Run Crane Copy
-      timeout-minutes: 30
-      run: |     
-        IMAGE_NAME="ghcr.io/jellyfin/jellyfin:latest"
+    - name: 精准解析域名和端口
+      run: |
+        # 变量内容为 域名:端口
+        RAW="${{ secrets.DOCKERHUB_PATH }}"
+        
+        # 提取域名（冒号前面的部分）
+        DOMAIN=$(echo "$RAW" | cut -d':' -f1)
+        # 提取端口（冒号后面的部分）
+        PORT=$(echo "$RAW" | cut -d':' -f2)
 
-        crane copy --platform linux/amd64 \
-          $IMAGE_NAME \
-          ${{ secrets.DOCKERHUB_PATH }}/$IMAGE_NAME
+        echo "DOMAIN=$DOMAIN" >> $GITHUB_ENV
+        echo "PORT=$PORT" >> $GITHUB_ENV
+        echo "URL=https://$RAW" >> $GITHUB_ENV
+        
+        echo "解析成功 -> 目标域名: $DOMAIN | 端口: $PORT | 完整测试URL: https://$RAW"
+
+    - name: 1. 测试延迟与丢包 (Ping 10次)
+      run: |
+        echo "正在 Ping 目标域名: ${{ env.DOMAIN }}"
+        ping -c 10 ${{ env.DOMAIN }} || echo "Ping 失败（可能服务器禁用了 ICMP/Ping，不影响后续测试）"
+
+    - name: 2. 路由追踪 (走 TCP 目标端口)
+      run: |
+        echo "正在追踪通往 ${{ env.DOMAIN }}:${{ env.PORT }} 的跨境网络节点..."
+        # 模拟真实的 HTTPS 流量走你的自定义端口
+        mtr --report --report-cycles 2 --tcp --port ${{ env.PORT }} ${{ env.DOMAIN }}
+
+    - name: 3. 实际上传速度测试 (10MB 压力测试)
+      run: |
+        echo "正在生成 10MB 测试数据..."
+        dd if=/dev/zero of=test_10mb.bin bs=1M count=10
+        
+        echo "开始向 ${{ env.URL }}/v2/ 强行灌入数据..."
+        # -k 忽略证书问题，只看最底下的平均上传速度
+        curl -k -o /dev/null -w "\n连接时间: %{time_connect}s\n开始传输时间: %{time_starttransfer}s\n总时间: %{time_total}s\n平均上传速度: %{speed_upload} 字节/秒\n" \
+          -X POST --data-binary @test_10mb.bin \
+          "${{ env.URL }}/v2/" || echo "测试结束"
