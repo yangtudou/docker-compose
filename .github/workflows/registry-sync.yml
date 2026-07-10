@@ -20,8 +20,6 @@ jobs:
         IMAGE_TAG="${BASE_NAME#*:}"
         [ "$BASE_NAME" = "$IMAGE_TAG" ] && IMAGE_TAG="latest"
         
-        # 2. 一脚踹过去，crane 内部会自动脱敏 secrets 变量
+        crane auth login "${{ secrets.ALIYUN_REGISTRY_DOMAIN }}" -u "${{ secrets.ALIYUN_USERNAME }}" -p "${{ secrets.ALIYUN_PASSWORD }}"
         crane copy --platform linux/amd64 \
-          --username "${{ secrets.ALIYUN_USERNAME }}" \
-          --password "${{ secrets.ALIYUN_PASSWORD }}" \
           "$SRC_IMAGE" "${{ secrets.ALIYUN_REGISTRY_DOMAIN }}/${IMAGE_NAME}:${IMAGE_TAG}"
