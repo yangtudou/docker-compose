@@ -1,52 +1,61 @@
-name: Network Test
+name: Docker Speed and Stats
 
 on:
   workflow_dispatch:
 
 jobs:
-  network-test:
+  docker-test:
     runs-on: ubuntu-latest
 
     steps:
-    - name: 安装网络诊断工具
+    - name: 1. 准备测试镜像 (约 30MB)
       run: |
-        sudo apt-get update
-        sudo apt-get install -y mtr curl
+        echo "=== 正在从官方拉取 30MB 的 ubuntu 镜像 ==="
+        docker pull ubuntu:24.04
+        docker tag ubuntu:24.04 ${{ secrets.DOCKERHUB_PATH }}/speed-test:latest
 
-    - name: 精准解析域名和端口
+    - name: 2. 测试【上传速度】(Docker Push)
       run: |
-        # 变量内容为 域名:端口
-        RAW="${{ secrets.DOCKERHUB_PATH }}"
+        TARGET="${{ secrets.DOCKERHUB_PATH }}/speed-test:latest"
+        echo "=== 开始 PUSH 到你的私有仓 ==="
         
-        # 提取域名（冒号前面的部分）
-        DOMAIN=$(echo "$RAW" | cut -d':' -f1)
-        # 提取端口（冒号后面的部分）
-        PORT=$(echo "$RAW" | cut -d':' -f2)
-
-        echo "DOMAIN=$DOMAIN" >> $GITHUB_ENV
-        echo "PORT=$PORT" >> $GITHUB_ENV
-        echo "URL=https://$RAW" >> $GITHUB_ENV
+        START_TIME=$(date +%s)
+        docker push $TARGET
+        END_TIME=$(date +%s)
         
-        echo "解析成功 -> 目标域名: $DOMAIN | 端口: $PORT | 完整测试URL: https://$RAW"
-
-    - name: 1. 测试延迟与丢包 (Ping 10次)
-      run: |
-        echo "正在 Ping 目标域名: ${{ env.DOMAIN }}"
-        ping -c 10 ${{ env.DOMAIN }} || echo "Ping 失败（可能服务器禁用了 ICMP/Ping，不影响后续测试）"
-
-    - name: 2. 路由追踪 (走 TCP 目标端口)
-      run: |
-        echo "正在追踪通往 ${{ env.DOMAIN }}:${{ env.PORT }} 的跨境网络节点..."
-        # 模拟真实的 HTTPS 流量走你的自定义端口
-        mtr --report --report-cycles 2 --tcp --port ${{ env.PORT }} ${{ env.DOMAIN }}
-
-    - name: 3. 实际上传速度测试 (10MB 压力测试)
-      run: |
-        echo "正在生成 10MB 测试数据..."
-        dd if=/dev/zero of=test_10mb.bin bs=1M count=10
+        DURATION=$((END_TIME - START_TIME))
+        if [ $DURATION -eq 0 ]; then DURATION=1; fi # 防止除以 0
         
-        echo "开始向 ${{ env.URL }}/v2/ 强行灌入数据..."
-        # -k 忽略证书问题，只看最底下的平均上传速度
-        curl -k -o /dev/null -w "\n连接时间: %{time_connect}s\n开始传输时间: %{time_starttransfer}s\n总时间: %{time_total}s\n平均上传速度: %{speed_upload} 字节/秒\n" \
-          -X POST --data-binary @test_10mb.bin \
-          "${{ env.URL }}/v2/" || echo "测试结束"
+        # ubuntu:24.04 压缩后上传体积约为 30MB
+        SPEED_MB=$(echo "scale=2; 30 / $DURATION" | bc)
+        SPEED_MBPS=$(echo "scale=2; $SPEED_MB * 8" | bc)
+        
+        echo "====================================="
+        echo " 上传耗时: $DURATION 秒"
+        echo " 平均上传速度: $SPEED_MB MB/s"
+        echo " 相当于宽带上行: $SPEED_MBPS Mbps (兆位/秒)"
+        echo "====================================="
+
+    - name: 3. 测试【下载速度】(Docker Pull)
+      run: |
+        TARGET="${{ secrets.DOCKERHUB_PATH }}/speed-test:latest"
+        echo "=== 清理本地缓存 ==="
+        docker rmi $TARGET || true
+        docker rmi ubuntu:24.04 || true
+        
+        echo "=== 开始从你的私有仓 PULL ==="
+        START_TIME=$(date +%s)
+        docker pull $TARGET
+        END_TIME=$(date +%s)
+        
+        DURATION=$((END_TIME - START_TIME))
+        if [ $DURATION -eq 0 ]; then DURATION=1; fi
+        
+        SPEED_MB=$(echo "scale=2; 30 / $DURATION" | bc)
+        SPEED_MBPS=$(echo "scale=2; $SPEED_MB * 8" | bc)
+        
+        echo "====================================="
+        echo " 下载耗时: $DURATION 秒"
+        echo " 平均下载速度: $SPEED_MB MB/s"
+        echo " 相当于网络下行: $SPEED_MBPS Mbps (兆位/秒)"
+        echo "====================================="
