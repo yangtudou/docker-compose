@@ -22,4 +22,4 @@ jobs:
         
         crane auth login "${{ secrets.ALIYUN_REGISTRY_DOMAIN }}" -u "${{ secrets.ALIYUN_USERNAME }}" -p "${{ secrets.ALIYUN_PASSWORD }}"
         crane copy --platform linux/amd64 \
-          "$SRC_IMAGE" "${{ secrets.ALIYUN_REGISTRY_DOMAIN }}/${IMAGE_NAME}:${IMAGE_TAG}"
+          "$SRC_IMAGE" "${{ secrets.ALIYUN_REGISTRY_DOMAIN }}/${{ secrets.ALIYUN_REGISTRY_SPACE_NAME }}/${IMAGE_NAME}:${IMAGE_TAG}"
