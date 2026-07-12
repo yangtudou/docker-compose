@@ -13,6 +13,4 @@ ghcr.io/hacdias/webdav:latest
 ghcr.io/sagernet/sing-box:latest
 ghcr.io/sagernet/sing-box:latest-testing
 ghcr.io/shadowsocks/ssserver-rust:latest
-
-
-vaultwarden/server:latest
+ghcr.io/dani-garcia/vaultwarden:latest
