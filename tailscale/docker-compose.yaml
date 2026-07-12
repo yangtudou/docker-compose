@@ -1,0 +1,35 @@
+services:
+
+  tailscale:
+    image: tailscale/tailscale:stable
+    container_name: tailscale
+    restart: unless-stopped
+    
+    # 采用主机网络，Tailscale 能直接获取宿主机物理网卡信息，性能最好
+    network_mode: host
+    
+    environment:
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_AUTHKEY=${TS_AUTHKEY}
+      - TS_HOSTNAME=${TS_HOSTNAME}
+      - TS_ROUTES=${TS_ROUTES}
+      
+      # 强制使用内核 TUN 模式（性能优于用户态 userspace 模式）
+      - TS_USERSPACE=false
+      
+      # --accept-dns=true 启用 MagicDNS
+      # --accept-routes 接受其他节点宣告的子网路由
+      # 如果需要作为出口节点，可以在后面追加 --advertise-exit-node
+      - TS_EXTRA_ARGS=--accept-dns=true --accept-routes
+
+    volumes:
+      - ./tailscale-state:/var/lib/tailscale
+    
+    # 网络管理和内核模块加权限，代替 privileged: true 提升安全性
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    
+    # 映射宿主机的 TUN 设备
+    devices:
+      - /dev/net/tun:/dev/net/tun
