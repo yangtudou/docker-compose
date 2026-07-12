@@ -1,0 +1,38 @@
+services:
+
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+
+    expose:
+      - "80"
+      - "3012" # WebSocket 本地访问
+    
+    environment:
+      - PUSH_ENABLED=true
+      - PUSH_INSTALLATION_ID=${PUSH_INSTALLATION_ID}
+      - PUSH_INSTALLATION_KEY=${PUSH_INSTALLATION_KEY}
+      - ADMIN_TOKEN=${ADMIN_TOKEN}       # 超级管理密码
+      - WEBSOCKET_ENABLED=true           # 必须启用 WebSocket
+      - SIGNUPS_ALLOWED=false            # 首次部署允许注册，创建账户后改为 false
+      - INVITATIONS_ALLOWED=true         # 允许通过管理界面邀请用户
+      - WEB_VAULT_ENABLED=true           # 启用网页客户端
+      - LOG_LEVEL=warn                   # 日志级别
+
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_FROM=${SMTP_FROM}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_SECURITY=${SMTP_SECURITY}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+
+    volumes:
+      - ./vaultwarden_data:/data
+
+    networks:
+      - homelab-net
+
+networks:
+  homelab-net:
+    external: true
