@@ -1,0 +1,19 @@
+services:
+
+  bark-server:
+    image: finab/bark-server
+    container_name: bark-server
+    restart: unless-stopped
+
+    expose:
+      - "8080"
+
+    volumes:
+      - ./data:/data
+
+    networks:
+      - homelab-net
+
+networks:
+  homelab-net:
+    external: true
