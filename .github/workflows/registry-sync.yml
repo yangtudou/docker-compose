@@ -4,32 +4,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  # 1️⃣ 任务一：动态解析文本，生成矩阵暗号
-  generate-matrix:
-    name: 🔍 Parse Image List
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Convert txt to JSON Array
-        id: set-matrix
-        run: |
-          # 过滤掉 # 开头的注释行和空行，然后用 jq 拼装成标准的 JSON 字符串数组
-          JSON_ARRAY=$(grep -vE '^[[:space:]]*#' images.txt | grep -vE '^[[:space:]]*$' | jq -R . | jq -s -c .)
-          echo "matrix=${JSON_ARRAY}" >> $GITHUB_OUTPUT
-
-  # 2️⃣ 任务二：诸神黄昏，多开虚拟机并行同步
   sync:
-    name: 🚚 Sync (${{ matrix.image }})
-    needs: generate-matrix # 必须等任务一算完矩阵才能开跑
+    name: Sync Images
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        image: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
-      fail-fast: false # 即使某一个镜像挂了，其他镜像的同步任务也不要停！
 
     env:
       PLATFORM: linux/amd64
@@ -40,22 +17,21 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 1
           persist-credentials: false
 
       - name: Install Crane
-        uses: imjasonh/setup-crane@v0.4
+        uses: imjasonh/setup-crane@v0.7
 
-      - name: Login Aliyun Registry
+      - name: Login Registry
         run: |
           crane auth login "$ALIYUN_REGISTRY_DOMAIN" \
             -u "$ALIYUN_USERNAME" \
             -p "$ALIYUN_PASSWORD"
 
-      # 🎯 真正开始同步，把矩阵当前的单条镜像传递给脚本
-      - name: Run Sync Script
+      - name: Sync Images
         run: |
           chmod +x .github/scripts/sync.sh
-          ./.github/scripts/sync.sh "${{ matrix.image }}"
+          ./.github/scripts/sync.sh
