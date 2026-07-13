@@ -25,7 +25,7 @@ jobs:
       - name: Sync Images with crane-plus
         uses: yangtudou/crane-plus@main
         with:
-          src: alpine:latest
+          src: docker.io/library/nginx
           dst: ${{ secrets.ALIYUN_REGISTRY_DOMAIN }}/${{ secrets.ALIYUN_REGISTRY_SPACE_NAME }}
           platform: linux/amd64
           max_concurrent: '4'
