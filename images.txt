@@ -3,10 +3,8 @@
 
 cloudflare/cloudflared:latest
 tailscale/tailscale:stable
-finab/bark-server:latest
 
 gdy666/lucky:v2
-neosmemo/memos:0.27.1
 metacubex/mihomo:latest
 
 ghcr.io/hacdias/webdav:latest
@@ -14,3 +12,5 @@ ghcr.io/sagernet/sing-box:latest
 ghcr.io/sagernet/sing-box:latest-testing
 ghcr.io/shadowsocks/ssserver-rust:latest
 ghcr.io/dani-garcia/vaultwarden:latest
+ghcr.io/finb/bark-server:latest
+ghcr.io/usememos/memos:0.27.1
