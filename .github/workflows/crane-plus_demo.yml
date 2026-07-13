@@ -23,7 +23,7 @@ jobs:
           password: ${{ secrets.ALIYUN_PASSWORD }}
 
       - name: Sync Images with crane-plus
-        uses: yangtudou/crane-plus@v1-test
+        uses: yangtudou/crane-plus@main
         with:
           src: alpine:latest
           dst: ${{ secrets.ALIYUN_REGISTRY_DOMAIN }}/${{ secrets.ALIYUN_REGISTRY_SPACE_NAME }}
