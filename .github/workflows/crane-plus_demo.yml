@@ -1,11 +1,11 @@
-name: crane-plus action demo
+name: registry-sync demo
 
 on:
   workflow_dispatch:
 
 jobs:
   sync:
-    name: crane-plus action demo
+    name: registry-sync demo
     runs-on: ubuntu-latest
 
     steps:
@@ -22,10 +22,11 @@ jobs:
           username: ${{ secrets.ALIYUN_USERNAME }}
           password: ${{ secrets.ALIYUN_PASSWORD }}
 
-      - name: Sync Images with crane-plus
-        uses: yangtudou/crane-plus@main
+      - name: registry-sync
+        uses: yangtudou/registry-sync@main
         with:
-          src: docker.io/library/nginx
+          src: docker.io/library/nginx:latest
           dst: ${{ secrets.ALIYUN_REGISTRY_DOMAIN }}/${{ secrets.ALIYUN_REGISTRY_SPACE_NAME }}
           platform: linux/amd64
-          max_concurrent: '4'
+          concurrency: '4'
+          retries: '3'
