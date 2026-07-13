@@ -1,83 +1,195 @@
 #!/usr/bin/env bash
 
-# 保持你优秀的严谨设置
 set -Eeuo pipefail
+
+########################################
+# Config
+########################################
 
 readonly PLATFORM="${PLATFORM:-linux/amd64}"
 readonly REGISTRY="${ALIYUN_REGISTRY_DOMAIN}"
 readonly NAMESPACE="${ALIYUN_REGISTRY_SPACE_NAME}"
-readonly CONFIG_FILE="images.yaml"
+readonly CONFIG_FILE="images.txt"
+readonly MAX_CONCURRENT="${MAX_CONCURRENT:-4}"
 
-# 🎯 核心控制：控制同时并发的最大镜像数（建议 4 到 6 个，既快又安全）
-readonly MAX_CONCURRENT=4
+########################################
+# Check
+########################################
 
 if [[ ! -f "$CONFIG_FILE" ]]; then
-    echo "❌ Error: Config file '$CONFIG_FILE' not found."
+    echo "::error::Config file '$CONFIG_FILE' not found."
     exit 1
 fi
 
-echo "========================================"
-echo " Docker Image Controlled Parallel Sync"
-echo "========================================"
+########################################
+# Read Images
+########################################
 
-# 用 yq 将 YAML 里的镜像列表直接读入 Bash 数组
-mapfile -t IMAGES < <(yq eval '.images[]' "$CONFIG_FILE")
+mapfile -t IMAGES < <(
+    grep -Ev '^[[:space:]]*(#|$)' "$CONFIG_FILE" \
+    | awk '!seen[$0]++'
+)
+
 readonly TOTAL=${#IMAGES[@]}
 
-echo "📦 Found $TOTAL image(s) to sync. Concurrency limit: $MAX_CONCURRENT"
-echo "----------------------------------------"
+if (( TOTAL == 0 )); then
+    echo "::notice::Nothing to sync."
+    exit 0
+fi
+
+########################################
+# Banner
+########################################
+
+START_TIME=$(date +%s)
+
+echo "========================================"
+echo " Docker Image Sync"
+echo "========================================"
+echo " Images      : $TOTAL"
+echo " Platform    : $PLATFORM"
+echo " Concurrency : $MAX_CONCURRENT"
+echo "========================================"
+echo
+
+########################################
+# GitHub Summary
+########################################
+
+SUMMARY_FILE="${GITHUB_STEP_SUMMARY:-}"
+
+if [[ -n "$SUMMARY_FILE" ]]; then
+{
+echo "# Docker Image Sync"
+echo
+echo "| Image | Status | Time |"
+echo "|------|:------:|------:|"
+} >> "$SUMMARY_FILE"
+fi
+
+########################################
+# Temp
+########################################
+
+TMP_DIR=$(mktemp -d)
+trap 'rm -rf "$TMP_DIR"' EXIT
 
 failed_count=0
 
-# 循环遍历镜像
+########################################
+# Parallel Sync
+########################################
+
 for ((i=0; i<TOTAL; i++)); do
+
     src="${IMAGES[i]}"
     task_num=$((i + 1))
 
-    # 1. 扔进后台并发执行
     (
+
         set -Eeuo pipefail
 
         image="${src##*/}"
         name="${image%%:*}"
         tag="${image#*:}"
+
         [[ "$image" == "$tag" ]] && tag="latest"
 
         dst="${REGISTRY}/${NAMESPACE}/${name}:${tag}"
 
-        echo "🚀 [$task_num/$TOTAL] Launched: $name:$tag"
+        log_file="${TMP_DIR}/${task_num}.log"
 
-        if crane copy --platform "$PLATFORM" "$src" "$dst" >/dev/null 2>&1; then
-            echo "✅ [$task_num/$TOTAL] Success: $name:$tag"
+        begin=$(date +%s)
+
+        if crane copy \
+            --platform "$PLATFORM" \
+            "$src" \
+            "$dst" \
+            >"$log_file" 2>&1
+        then
+
+            elapsed=$(( $(date +%s) - begin ))
+
+            printf "[%02d/%02d] %-35s ✅ %2ss\n" \
+                "$task_num" "$TOTAL" "$image" "$elapsed"
+
+            if [[ -n "$SUMMARY_FILE" ]]; then
+                echo "| \`$src\` | ✅ | ${elapsed}s |" >> "$SUMMARY_FILE"
+            fi
+
             exit 0
-        else
-            echo "❌ [$task_num/$TOTAL] Failed: $name:$tag"
-            exit 1
         fi
+
+        elapsed=$(( $(date +%s) - begin ))
+
+        printf "[%02d/%02d] %-35s ❌ %2ss\n" \
+            "$task_num" "$TOTAL" "$image" "$elapsed"
+
+        echo "::group::Failed - ${src}"
+        cat "$log_file"
+        echo "::endgroup::"
+
+        echo "::error::Failed to sync ${src}"
+
+        if [[ -n "$SUMMARY_FILE" ]]; then
+            echo "| \`$src\` | ❌ | ${elapsed}s |" >> "$SUMMARY_FILE"
+        fi
+
+        exit 1
+
     ) &
 
-    # 2. 🎯 节流阀：检查当前后台正在跑的任务数
-    # 如果达到了最大并发限制，就阻塞等待“任意一个”先跑完，释放出坑位后才允许进下一个循环
     while [[ $(jobs -rp | wc -l) -ge "$MAX_CONCURRENT" ]]; do
-        # wait -n 会等待下一个子进程结束，并返回它的 exit code
-        # 如果子进程失败了（返回非0），就给失败计数器加 1
         wait -n || failed_count=$((failed_count + 1))
     done
+
 done
 
-# 3. 🏁 收尾：等最后一波留在后台的残余任务全部跑完
+########################################
+# Wait Remaining Jobs
+########################################
+
 while [[ $(jobs -rp | wc -l) -gt 0 ]]; do
     wait -n || failed_count=$((failed_count + 1))
 done
 
-echo "----------------------------------------"
+########################################
+# Summary
+########################################
+
+SUCCESS=$((TOTAL - failed_count))
+ELAPSED=$(( $(date +%s) - START_TIME ))
+
+echo
+echo "========================================"
 echo " Summary"
 echo "----------------------------------------"
+printf " %-10s : %d\n" "Images" "$TOTAL"
+printf " %-10s : %d\n" "Success" "$SUCCESS"
+printf " %-10s : %d\n" "Failed" "$failed_count"
+printf " %-10s : %ss\n" "Elapsed" "$ELAPSED"
+echo "========================================"
+
+if [[ -n "$SUMMARY_FILE" ]]; then
+{
+echo
+echo "---"
+echo
+echo "**Images:** $TOTAL  "
+echo "**Success:** $SUCCESS  "
+echo "**Failed:** $failed_count  "
+echo "**Elapsed:** ${ELAPSED}s"
+} >> "$SUMMARY_FILE"
+fi
+
+########################################
+# Exit
+########################################
+
 if (( failed_count > 0 )); then
-    echo "❌ ${failed_count} image(s) failed to sync. Please check logs above."
-    echo "========================================"
+    echo "::error::$failed_count image(s) failed."
     exit 1
 fi
 
-echo "🎉 All images synced successfully within concurrency limits!"
-echo "========================================"
+echo "::notice::All images synced successfully."
+echo "🎉 All images synced successfully."
