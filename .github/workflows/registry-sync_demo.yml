@@ -25,7 +25,7 @@ jobs:
       - name: registry-sync
         uses: yangtudou/registry-sync@main
         with:
-          src: nginx:latest
+          file: images.txt
           dst: ${{ secrets.ALIYUN_REGISTRY_DOMAIN }}/${{ secrets.ALIYUN_REGISTRY_SPACE_NAME }}
           platform: linux/amd64
           concurrency: '4'
