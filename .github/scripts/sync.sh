@@ -9,8 +9,12 @@ set -Eeuo pipefail
 readonly PLATFORM="${PLATFORM:-linux/amd64}"
 readonly REGISTRY="${ALIYUN_REGISTRY_DOMAIN}"
 readonly NAMESPACE="${ALIYUN_REGISTRY_SPACE_NAME}"
-readonly CONFIG_FILE="images.txt"
+readonly CONFIG_FILE="${1:-images.txt}"  # 🌟 完美解耦：默认 images.txt，也支持参数传入
 readonly MAX_CONCURRENT="${MAX_CONCURRENT:-4}"
+
+# 🎨 科技感红绿徽章定义 (Shields.io 风格)
+readonly BADGE_SUCCESS="![Success](https://img.shields.io/badge/Status-Success-success?style=flat-square)"
+readonly BADGE_FAILED="![Failed](https://img.shields.io/badge/Status-Failed-critical?style=flat-square)"
 
 ########################################
 # Check
@@ -53,22 +57,22 @@ echo "========================================"
 echo
 
 ########################################
-# GitHub Summary
+# GitHub Summary Init
 ########################################
 
 SUMMARY_FILE="${GITHUB_STEP_SUMMARY:-}"
 
 if [[ -n "$SUMMARY_FILE" ]]; then
 {
-echo "# Docker Image Sync"
-echo
-echo "| Image | Status | Time |"
-echo "|------|:------:|------:|"
+    echo "# 🚀 Docker Image Sync Report"
+    echo
+    echo "| Image | Status | Duration |"
+    echo "| :--- | :---: | ---: |"
 } >> "$SUMMARY_FILE"
 fi
 
 ########################################
-# Temp
+# Temp Directory Setup
 ########################################
 
 TMP_DIR=$(mktemp -d)
@@ -86,7 +90,6 @@ for ((i=0; i<TOTAL; i++)); do
     task_num=$((i + 1))
 
     (
-
         set -Eeuo pipefail
 
         image="${src##*/}"
@@ -96,8 +99,8 @@ for ((i=0; i<TOTAL; i++)); do
         [[ "$image" == "$tag" ]] && tag="latest"
 
         dst="${REGISTRY}/${NAMESPACE}/${name}:${tag}"
-
         log_file="${TMP_DIR}/${task_num}.log"
+        sum_file="${TMP_DIR}/${task_num}.sum"  # 🌟 独立的摘要缓存，杜绝并发冲突
 
         begin=$(date +%s)
 
@@ -107,16 +110,13 @@ for ((i=0; i<TOTAL; i++)); do
             "$dst" \
             >"$log_file" 2>&1
         then
-
             elapsed=$(( $(date +%s) - begin ))
 
             printf "[%02d/%02d] %-35s ✅ %2ss\n" \
                 "$task_num" "$TOTAL" "$image" "$elapsed"
 
-            if [[ -n "$SUMMARY_FILE" ]]; then
-                echo "| \`$src\` | ✅ | ${elapsed}s |" >> "$SUMMARY_FILE"
-            fi
-
+            # 🌟 写入临时摘要文件
+            echo "| \`$src\` | $BADGE_SUCCESS | ${elapsed}s |" > "$sum_file"
             exit 0
         fi
 
@@ -131,14 +131,13 @@ for ((i=0; i<TOTAL; i++)); do
 
         echo "::error::Failed to sync ${src}"
 
-        if [[ -n "$SUMMARY_FILE" ]]; then
-            echo "| \`$src\` | ❌ | ${elapsed}s |" >> "$SUMMARY_FILE"
-        fi
-
+        # 🌟 写入临时摘要文件
+        echo "| \`$src\` | $BADGE_FAILED | ${elapsed}s |" > "$sum_file"
         exit 1
 
     ) &
 
+    # 控流节流阀
     while [[ $(jobs -rp | wc -l) -ge "$MAX_CONCURRENT" ]]; do
         wait -n || failed_count=$((failed_count + 1))
     done
@@ -154,7 +153,20 @@ while [[ $(jobs -rp | wc -l) -gt 0 ]]; do
 done
 
 ########################################
-# Summary
+# Orderly Write Summary Table
+########################################
+
+# 🌟 在主进程中按任务序号顺序、安全地将表格行追加到 Summary 文件
+if [[ -n "$SUMMARY_FILE" ]]; then
+    for ((i=1; i<=TOTAL; i++)); do
+        if [[ -f "${TMP_DIR}/${i}.sum" ]]; then
+            cat "${TMP_DIR}/${i}.sum" >> "$SUMMARY_FILE"
+        fi
+    done
+fi
+
+########################################
+# Summary Output
 ########################################
 
 SUCCESS=$((TOTAL - failed_count))
@@ -171,19 +183,24 @@ printf " %-10s : %ss\n" "Elapsed" "$ELAPSED"
 echo "========================================"
 
 if [[ -n "$SUMMARY_FILE" ]]; then
+    # 决定最终大面板的徽章状态
+    final_badge="$BADGE_SUCCESS"
+    (( failed_count > 0 )) && final_badge="$BADGE_FAILED"
 {
-echo
-echo "---"
-echo
-echo "**Images:** $TOTAL  "
-echo "**Success:** $SUCCESS  "
-echo "**Failed:** $failed_count  "
-echo "**Elapsed:** ${ELAPSED}s"
+    echo
+    echo "---"
+    echo
+    echo "### 📊 Metrics Summary"
+    echo "- **Total Images:** $TOTAL"
+    echo "- **Success:** $SUCCESS"
+    echo "- **Failed:** $failed_count"
+    echo "- **Execution Time:** ${ELAPSED}s"
+    echo "- **Conclusion:** $final_badge"
 } >> "$SUMMARY_FILE"
 fi
 
 ########################################
-# Exit
+# Exit Status
 ########################################
 
 if (( failed_count > 0 )); then
