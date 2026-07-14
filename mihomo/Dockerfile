@@ -3,10 +3,12 @@ FROM alpine:latest AS builder
 RUN apk add --no-cache curl jq gzip
 
 RUN mkdir /mihomo && \
-    curl -s https://api.github.com/repos/MetaCubeX/mihomo/releases/latest \
-    | jq -r '.assets[] | select(.name | contains("linux-amd64") and endswith(".gz")) | .browser_download_url' \
-    | xargs curl -L \
-    | gzip -d > /mihomo/mihomo && \
+    RELEASE=$(curl -s https://api.github.com/repos/MetaCubeX/mihomo/releases/latest) && \
+    TAG=$(echo "$RELEASE" | jq -r '.tag_name') && \
+    URL=$(echo "$RELEASE" | jq -r --arg tag "$TAG" \
+        '.assets[] | select(.name == ("mihomo-linux-amd64-v1-" + $tag + ".gz")) | .browser_download_url') && \
+    echo "Download: $URL" && \
+    curl -L "$URL" | gzip -d > /mihomo/mihomo && \
     chmod +x /mihomo/mihomo
 
 
