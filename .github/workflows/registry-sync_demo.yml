@@ -26,4 +26,4 @@ jobs:
         uses: yangtudou/registry-sync@main
         with:
           dst-prefix: ${{ secrets.ALIYUN_REGISTRY_DOMAIN }}/${{ secrets.ALIYUN_REGISTRY_SPACE_NAME }}
-          platform: linux/amd64
+          dst-flatten: true
