@@ -25,8 +25,5 @@ jobs:
       - name: registry-sync
         uses: yangtudou/registry-sync@main
         with:
-          file: images.txt
-          dst: ${{ secrets.ALIYUN_REGISTRY_DOMAIN }}/${{ secrets.ALIYUN_REGISTRY_SPACE_NAME }}
+          dst-prefix: ${{ secrets.ALIYUN_REGISTRY_DOMAIN }}/${{ secrets.ALIYUN_REGISTRY_SPACE_NAME }}
           platform: linux/amd64
-          concurrency: '4'
-          retries: '3'
