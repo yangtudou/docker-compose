@@ -1,0 +1,33 @@
+services:
+  mihomo:
+    image: metacubex/mihomo:latest
+    container_name: mihomo
+    restart: unless-stopped
+    mem_limit: 512m
+
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    
+    devices:
+      - /dev/net/tun:/dev/net/tun
+
+    volumes:
+      - ./config:/root/.config/mihomo
+      - /etc/localtime:/etc/localtime:ro
+
+    networks:
+      - mihomo-net
+      - singbox-net
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  mihomo-net:
+    external: true
+  singbox-net:
+    external: true
