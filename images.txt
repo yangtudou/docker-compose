@@ -15,7 +15,7 @@ ghcr.io/shadowsocks/ssserver-rust:latest
 ghcr.io/dani-garcia/vaultwarden:latest
 ghcr.io/finb/bark-server:latest
 
-ghcr.io/usememos/memos:0.27.1
+ghcr.io/usememos/memos:0.29.1
 
 # ghcr.io/caddy-dns/cloudflare:latest
 # ghcr.io/jellyfin/jellyfin:latest
