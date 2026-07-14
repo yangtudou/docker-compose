@@ -13,3 +13,5 @@ ghcr.io/dani-garcia/vaultwarden:latest
 ghcr.io/finb/bark-server:latest
 
 ghcr.io/usememos/memos:0.27.1
+
+# ghcr.io/caddy-dns/cloudflare:latest
