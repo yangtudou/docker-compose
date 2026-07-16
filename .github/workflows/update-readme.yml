@@ -41,11 +41,11 @@ jobs:
           images.sort()
 
           def escape_shields(text):
-              # Shields.io 规则：- 转义为 --，_ 转义为 __，然后进行 URL 编码（处理斜杠 / 等）
+              # Shields.io 规则：- 转义为 --，_ 转义为 __，然后进行 URL 编码
               escaped = text.replace('_', '__').replace('-', '--')
               return urllib.parse.quote(escaped)
 
-          # 4. 拼接纯徽章列表
+          # 4. 构建流式徽章墙
           badge_list = []
           for img in images:
               if ':' in img:
@@ -61,11 +61,10 @@ jobs:
               elif name.startswith('docker.io/'):
                   name = name[len('docker.io/'):]
               
-              # 编码 Shields.io 的 Label 和 Message
               escaped_name = escape_shields(name)
               escaped_tag = escape_shields(tag)
               
-              # 根据 Tag 类型智能配色
+              # 智能配色
               if tag == 'latest':
                   color = 'blue'
               elif any(char.isdigit() for char in tag):
@@ -73,18 +72,17 @@ jobs:
               else:
                   color = 'orange'
               
-              # 拼接为单一徽章：https://img.shields.io/badge/镜像名-标签-颜色?style=flat
+              # 生成拼接徽章
               badge_url = f"https://img.shields.io/badge/{escaped_name}-{escaped_tag}-{color}?style=flat"
-              badge_list.append(f"- ![{img}]({badge_url})")
+              badge_list.append(f"![{img}]({badge_url})")
 
-          # 将所有徽章用换行符连接成极简列表
-          content = "\n".join(badge_list)
+          # 💡 核心改动：用空格拼接所有徽章，直接平铺，彻底干掉 markdown 列表的圆点
+          content = " ".join(badge_list)
 
           # 5. 替换 README.md 中的定位标签
           with open('README.md', 'r', encoding='utf-8') as f:
               readme = f.read()
 
-          # 自动兼容新老标签（优先找 LIST 标签，找不到再找 TABLE 标签）
           start_tag = '<!-- IMAGES_LIST_START -->' if '<!-- IMAGES_LIST_START -->' in readme else '<!-- IMAGES_TABLE_START -->'
           end_tag = '<!-- IMAGES_LIST_END -->' if '<!-- IMAGES_LIST_END -->' in readme else '<!-- IMAGES_TABLE_END -->'
 
@@ -93,9 +91,9 @@ jobs:
               after = readme.split(end_tag)[1]
               new_readme = before + start_tag + '\n\n' + content + '\n\n' + end_tag + after
               
-              with open(readme_path := 'README.md', 'w', encoding='utf-8') as f:
+              with open('README.md', 'w', encoding='utf-8') as f:
                   f.write(new_readme)
-              print("README.md 极简徽章列表已成功更新！")
+              print("README.md 流式徽章墙已成功更新！")
           else:
               print("未在 README.md 中找到定位标签，跳过。")
           EOF
@@ -112,6 +110,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "README 没变化，跳过推送。"
           else
-            git commit -m "docs: 自动更新镜像徽章列表 [skip ci]"
+            git commit -m "docs: 自动更新并平铺镜像徽章 [skip ci]"
             git push origin HEAD:${{ github.ref }}
           fi
