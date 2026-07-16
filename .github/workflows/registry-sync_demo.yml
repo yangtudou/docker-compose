@@ -1,4 +1,4 @@
-name: registry-sync demo
+name: Aliyun Registry Sync
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: 检出当前仓库
         uses: actions/checkout@v7
         with:
           fetch-depth: 1
@@ -28,14 +28,14 @@ jobs:
       #     echo "=== 扫描完成，生成的 images.txt 内容如下 ==="
       #     cat images.txt
       
-      - name: Log in to Aliyun Registry
+      - name: 登入私有仓库
         uses: docker/login-action@v4
         with:
           registry: ${{ secrets.ALIYUN_REGISTRY_DOMAIN }}
           username: ${{ secrets.ALIYUN_USERNAME }}
           password: ${{ secrets.ALIYUN_PASSWORD }}
 
-      - name: registry-sync
+      - name: 同步镜像文件
         uses: yangtudou/registry-sync@main
         with:
           dst-prefix: ${{ secrets.ALIYUN_REGISTRY_DOMAIN }}/${{ secrets.ALIYUN_REGISTRY_SPACE_NAME }}
