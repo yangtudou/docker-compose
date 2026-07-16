@@ -1,23 +1,33 @@
-cloudflare/cloudflared:latest
+# ========== docker.io 镜像仓库 ========== #
+library/registry:3
+joxit/docker-registry-ui:main
+
 gdy666/lucky:v2
+
+louislam/dockge:1
+louislam/uptime-kuma:2
+
+cloudflare/cloudflared:latest
 metacubex/mihomo:latest
 
-joxit/docker-registry-ui:main
-registry:3
 
+
+# ========== github 镜像仓库 ========== #
 ghcr.io/tailscale/tailscale:stable
 
+# sing-box latest-testing 标签是测试版本，会可以支持最新特性
 ghcr.io/sagernet/sing-box:latest
 ghcr.io/sagernet/sing-box:latest-testing
 
 ghcr.io/hacdias/webdav:latest
-ghcr.io/shadowsocks/ssserver-rust:latest
+# ghcr.io/shadowsocks/ssserver-rust:latest
 ghcr.io/dani-garcia/vaultwarden:latest
 ghcr.io/finb/bark-server:latest
 
+# memos 移动端支持后端版本
 ghcr.io/usememos/memos:0.29.1
 
 # ghcr.io/caddy-dns/cloudflare:latest
-# ghcr.io/jellyfin/jellyfin:latest
+ghcr.io/jellyfin/jellyfin:latest
 # ghcr.io/userdocs/iperf3-static:latest
 
