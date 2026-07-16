@@ -8,82 +8,21 @@
 
 <!-- IMAGES_TABLE_START -->
 
-<table>
-  <thead>
-    <tr>
-      <th width="10%" align="center">#</th>
-      <th width="65%" align="left">Container Image</th>
-      <th width="25%" align="center">Tag</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td align="center"><code>01</code></td>
-      <td><sub>cloudflare</sub> / <strong>cloudflared</strong></td>
-      <td align="center"><code>latest</code></td>
-    </tr>
-    <tr>
-      <td align="center"><code>02</code></td>
-      <td><sub>gdy666</sub> / <strong>lucky</strong></td>
-      <td align="center"><code>v2</code></td>
-    </tr>
-    <tr>
-      <td align="center"><code>03</code></td>
-      <td><sub>ghcr.io</sub> / <strong>dani-garcia/vaultwarden</strong></td>
-      <td align="center"><code>latest</code></td>
-    </tr>
-    <tr>
-      <td align="center"><code>04</code></td>
-      <td><sub>ghcr.io</sub> / <strong>finb/bark-server</strong></td>
-      <td align="center"><code>latest</code></td>
-    </tr>
-    <tr>
-      <td align="center"><code>05</code></td>
-      <td><sub>ghcr.io</sub> / <strong>hacdias/webdav</strong></td>
-      <td align="center"><code>latest</code></td>
-    </tr>
-    <tr>
-      <td align="center"><code>06</code></td>
-      <td><sub>ghcr.io</sub> / <strong>sagernet/sing-box</strong></td>
-      <td align="center"><code>latest</code></td>
-    </tr>
-    <tr>
-      <td align="center"><code>07</code></td>
-      <td><sub>ghcr.io</sub> / <strong>sagernet/sing-box</strong></td>
-      <td align="center"><code>latest-testing</code></td>
-    </tr>
-    <tr>
-      <td align="center"><code>08</code></td>
-      <td><sub>ghcr.io</sub> / <strong>shadowsocks/ssserver-rust</strong></td>
-      <td align="center"><code>latest</code></td>
-    </tr>
-    <tr>
-      <td align="center"><code>09</code></td>
-      <td><sub>ghcr.io</sub> / <strong>tailscale/tailscale</strong></td>
-      <td align="center"><code>stable</code></td>
-    </tr>
-    <tr>
-      <td align="center"><code>10</code></td>
-      <td><sub>ghcr.io</sub> / <strong>usememos/memos</strong></td>
-      <td align="center"><code>0.29.1</code></td>
-    </tr>
-    <tr>
-      <td align="center"><code>11</code></td>
-      <td><sub>joxit</sub> / <strong>docker-registry-ui</strong></td>
-      <td align="center"><code>main</code></td>
-    </tr>
-    <tr>
-      <td align="center"><code>12</code></td>
-      <td><sub>metacubex</sub> / <strong>mihomo</strong></td>
-      <td align="center"><code>latest</code></td>
-    </tr>
-    <tr>
-      <td align="center"><code>13</code></td>
-      <td><strong>registry</strong></td>
-      <td align="center"><code>3</code></td>
-    </tr>
-  </tbody>
-</table>
+| # | 镜像名称 | 标签 |
+| :-: | :--- | :-: |
+| **01** | cloudflare/cloudflared | latest |
+| **02** | gdy666/lucky | v2 |
+| **03** | ghcr.io/dani-garcia/vaultwarden | latest |
+| **04** | ghcr.io/finb/bark-server | latest |
+| **05** | ghcr.io/hacdias/webdav | latest |
+| **06** | ghcr.io/sagernet/sing-box | latest |
+| **07** | ghcr.io/sagernet/sing-box | latest-testing |
+| **08** | ghcr.io/shadowsocks/ssserver-rust | latest |
+| **09** | ghcr.io/tailscale/tailscale | stable |
+| **10** | ghcr.io/usememos/memos | 0.29.1 |
+| **11** | joxit/docker-registry-ui | main |
+| **12** | metacubex/mihomo | latest |
+| **13** | registry | 3 |
 
 <!-- IMAGES_TABLE_END -->
 
