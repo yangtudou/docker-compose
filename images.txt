@@ -4,7 +4,7 @@ joxit/docker-registry-ui:main
 
 gdy666/lucky:v2
 
-# 这两个镜像拉取时间也很慢
+# 这两个镜像同步时间也慢
 louislam/dockge:1
 louislam/uptime-kuma:2
 
@@ -31,7 +31,8 @@ ghcr.io/usememos/memos:0.29.1
 # 这个caddy 镜像带有cloudflare DNS-01 验证，申请证书好用
 # ghcr.io/caddy-dns/cloudflare:latest
 
-# jellyfin 镜像太大了 
+# jellyfin 镜像太大了
+# 最简单的方法是本地先推一遍
 ghcr.io/jellyfin/jellyfin:latest
 # ghcr.io/userdocs/iperf3-static:latest
 
