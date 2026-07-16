@@ -8,21 +8,21 @@
 
 <!-- IMAGES_TABLE_START -->
 
-| 序号 | 📦 镜像名称 (Image) | 🏷️ 版本 (Tag) | ⚡ 状态 (Status) |
-| :---: | :--- | :---: | :---: |
-| 1 | `cloudflare/cloudflared` | `latest` | 🟢 已同步 |
-| 2 | `gdy666/lucky` | `v2` | 🟢 已同步 |
-| 3 | `metacubex/mihomo` | `latest` | 🟢 已同步 |
-| 4 | `joxit/docker-registry-ui` | `main` | 🟢 已同步 |
-| 5 | `registry` | `3` | 🟢 已同步 |
-| 6 | `ghcr.io/tailscale/tailscale` | `stable` | 🟢 已同步 |
-| 7 | `ghcr.io/sagernet/sing-box` | `latest` | 🟢 已同步 |
-| 8 | `ghcr.io/sagernet/sing-box` | `latest-testing` | 🟢 已同步 |
-| 9 | `ghcr.io/hacdias/webdav` | `latest` | 🟢 已同步 |
-| 10 | `ghcr.io/shadowsocks/ssserver-rust` | `latest` | 🟢 已同步 |
-| 11 | `ghcr.io/dani-garcia/vaultwarden` | `latest` | 🟢 已同步 |
-| 12 | `ghcr.io/finb/bark-server` | `latest` | 🟢 已同步 |
-| 13 | `ghcr.io/usememos/memos` | `0.29.1` | 🟢 已同步 |
+| # | 🐳 镜像名称 (Container Image) | 🏷️ 版本 (Tag) |
+| :-: | :--- | :-: |
+| **01** | `cloudflare/cloudflared` | `latest` |
+| **02** | `gdy666/lucky` | `v2` |
+| **03** | `metacubex/mihomo` | `latest` |
+| **04** | `joxit/docker-registry-ui` | `main` |
+| **05** | `registry` | `3` |
+| **06** | `ghcr.io/tailscale/tailscale` | `stable` |
+| **07** | `ghcr.io/sagernet/sing-box` | `latest` |
+| **08** | `ghcr.io/sagernet/sing-box` | `latest-testing` |
+| **09** | `ghcr.io/hacdias/webdav` | `latest` |
+| **10** | `ghcr.io/shadowsocks/ssserver-rust` | `latest` |
+| **11** | `ghcr.io/dani-garcia/vaultwarden` | `latest` |
+| **12** | `ghcr.io/finb/bark-server` | `latest` |
+| **13** | `ghcr.io/usememos/memos` | `0.29.1` |
 
 <!-- IMAGES_TABLE_END -->
 
