@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
           persist-credentials: true
@@ -27,7 +27,7 @@ jobs:
               print("未找到 images.txt，跳过更新。")
               exit(0)
 
-          # 2. 读取并过滤：去掉空行，删掉所有包含 '#' 的行
+          # 2. 读取并严格过滤：去掉空行，删掉所有包含 '#' 的行
           images = []
           with open('images.txt', 'r', encoding='utf-8') as f:
               for line in f:
@@ -36,18 +36,23 @@ jobs:
                       continue
                   images.append(line)
 
-          # 3. 拼接一个高颜值的 Markdown 表格
-          table = "| 序号 | 📦 镜像名称 (Image) | 🏷️ 版本 (Tag) | ⚡ 状态 (Status) |\n"
-          table += "| :---: | :--- | :---: | :---: |\n"
+          # 3. 拼接高颜值、极简精美 Markdown 表格
+          table = "| # | 🐳 镜像名称 (Container Image) | 🏷️ 版本 (Tag) |\n"
+          table += "| :-: | :--- | :-: |\n"
 
           for idx, img in enumerate(images, 1):
-              # 自动拆分镜像名和 Tag，如果没有 Tag 默认写 latest
+              # 兼容带端口的私有仓库（如 registry:5000/image:v1）的 tag 拆分
               if ':' in img:
-                  name, tag = img.rsplit(':', 1)
+                  parts = img.rsplit(':', 1)
+                  if '/' in parts[1]:  # 说明冒号是端口号（如 registry:5000/image），没有 tag
+                      name, tag = img, 'latest'
+                  else:
+                      name, tag = parts[0], parts[1]
               else:
                   name, tag = img, 'latest'
               
-              table += f"| {idx} | `{name}` | `{tag}` | 🟢 已同步 |\n"
+              # 序号使用双位数对齐（如 01, 02），整体排版极度舒适
+              table += f"| **{idx:02d}** | `{name}` | `{tag}` |\n"
 
           # 4. 替换 README.md 中的内容
           with open('README.md', 'r', encoding='utf-8') as f:
@@ -63,7 +68,7 @@ jobs:
               
               with open('README.md', 'w', encoding='utf-8') as f:
                   f.write(new_readme)
-              print("README.md 中的镜像表格已更新（已剔除未同步镜像）！")
+              print("README.md 极简精美表格更新成功！")
           else:
               print("未在 README.md 中找到定位标签，跳过。")
           EOF
