@@ -27,7 +27,7 @@ jobs:
               print("未找到 images.txt，跳过更新。")
               exit(0)
 
-          # 2. 读取并过滤（去掉空行和包含 '#' 的行）
+          # 2. 读取并严格过滤（去掉空行和包含 '#' 的行）
           images = []
           with open('images.txt', 'r', encoding='utf-8') as f:
               for line in f:
@@ -39,16 +39,9 @@ jobs:
           # 3. 按 A-Z 重新排序
           images.sort()
 
-          # 4. 构建高级感 HTML 原生表格（锁定比例与字号分层）
-          table = "<table>\n"
-          table += "  <thead>\n"
-          table += "    <tr>\n"
-          table += "      <th width=\"10%\" align=\"center\">#</th>\n"
-          table += "      <th width=\"65%\" align=\"left\">Container Image</th>\n"
-          table += "      <th width=\"25%\" align=\"center\">Tag</th>\n"
-          table += "    </tr>\n"
-          table += "  </thead>\n"
-          table += "  <tbody>\n"
+          # 4. 构建无代码块、无 Emoji 的极简 Markdown 表格
+          table = "| # | 镜像名称 | 标签 |\n"
+          table += "| :-: | :--- | :-: |\n"
 
           for idx, img in enumerate(images, 1):
               # 极简拆分逻辑
@@ -57,21 +50,8 @@ jobs:
               else:
                   name, tag = img, 'latest'
               
-              # 视觉分层：将命名空间置灰缩小，项目名加粗
-              if '/' in name:
-                  ns, repo = name.split('/', 1)
-                  display_name = f"<sub>{ns}</sub> / <strong>{repo}</strong>"
-              else:
-                  display_name = f"<strong>{name}</strong>"
-
-              table += "    <tr>\n"
-              table += f"      <td align=\"center\"><code>{idx:02d}</code></td>\n"
-              table += f"      <td>{display_name}</td>\n"
-              table += f"      <td align=\"center\"><code>{tag}</code></td>\n"
-              table += "    </tr>\n"
-          
-          table += "  </tbody>\n"
-          table += "</table>"
+              # 去掉所有反引号，序号加粗以作视觉区隔
+              table += f"| **{idx:02d}** | {name} | {tag} |\n"
 
           # 5. 替换 README.md 中的定位标签
           with open('README.md', 'r', encoding='utf-8') as f:
@@ -83,11 +63,11 @@ jobs:
           if start_tag in readme and end_tag in readme:
               before = readme.split(start_tag)[0]
               after = readme.split(end_tag)[1]
-              new_readme = before + start_tag + '\n\n' + table + '\n\n' + end_tag + after
+              new_readme = before + start_tag + '\n\n' + table + '\n' + end_tag + after
               
               with open('README.md', 'w', encoding='utf-8') as f:
                   f.write(new_readme)
-              print("README.md 高级感表格已成功更新！")
+              print("README.md 极简表格更新成功！")
           else:
               print("未在 README.md 中找到定位标签，跳过。")
           EOF
