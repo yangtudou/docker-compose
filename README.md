@@ -8,21 +8,21 @@
 
 <!-- IMAGES_TABLE_START -->
 
-| # | 🐳 镜像名称 (Container) | ✦ 标签 (Tag) |
-| :-: | :--- | :-: |
-| **01** | cloudflare/cloudflared | ![latest](https://img.shields.io/badge/tag-latest-blue?style=flat-square) |
-| **02** | gdy666/lucky | ![v2](https://img.shields.io/badge/tag-v2-brightgreen?style=flat-square) |
-| **03** | ghcr.io/dani-garcia/vaultwarden | ![latest](https://img.shields.io/badge/tag-latest-blue?style=flat-square) |
-| **04** | ghcr.io/finb/bark-server | ![latest](https://img.shields.io/badge/tag-latest-blue?style=flat-square) |
-| **05** | ghcr.io/hacdias/webdav | ![latest](https://img.shields.io/badge/tag-latest-blue?style=flat-square) |
-| **06** | ghcr.io/sagernet/sing-box | ![latest](https://img.shields.io/badge/tag-latest-blue?style=flat-square) |
-| **07** | ghcr.io/sagernet/sing-box | ![latest-testing](https://img.shields.io/badge/tag-latest--testing-orange?style=flat-square) |
-| **08** | ghcr.io/shadowsocks/ssserver-rust | ![latest](https://img.shields.io/badge/tag-latest-blue?style=flat-square) |
-| **09** | ghcr.io/tailscale/tailscale | ![stable](https://img.shields.io/badge/tag-stable-orange?style=flat-square) |
-| **10** | ghcr.io/usememos/memos | ![0.29.1](https://img.shields.io/badge/tag-0.29.1-brightgreen?style=flat-square) |
-| **11** | joxit/docker-registry-ui | ![main](https://img.shields.io/badge/tag-main-orange?style=flat-square) |
-| **12** | metacubex/mihomo | ![latest](https://img.shields.io/badge/tag-latest-blue?style=flat-square) |
-| **13** | registry | ![3](https://img.shields.io/badge/tag-3-brightgreen?style=flat-square) |
+| 镜像名称 | 标签 |
+| :--- | :-: |
+| cloudflare/cloudflared | ![latest](https://img.shields.io/badge/-latest-4470c4?style=flat-square) |
+| gdy666/lucky | ![v2](https://img.shields.io/badge/-v2-3da95e?style=flat-square) |
+| ghcr.io/dani-garcia/vaultwarden | ![latest](https://img.shields.io/badge/-latest-4470c4?style=flat-square) |
+| ghcr.io/finb/bark-server | ![latest](https://img.shields.io/badge/-latest-4470c4?style=flat-square) |
+| ghcr.io/hacdias/webdav | ![latest](https://img.shields.io/badge/-latest-4470c4?style=flat-square) |
+| ghcr.io/sagernet/sing-box | ![latest](https://img.shields.io/badge/-latest-4470c4?style=flat-square) |
+| ghcr.io/sagernet/sing-box | ![latest-testing](https://img.shields.io/badge/-latest--testing-8a919f?style=flat-square) |
+| ghcr.io/shadowsocks/ssserver-rust | ![latest](https://img.shields.io/badge/-latest-4470c4?style=flat-square) |
+| ghcr.io/tailscale/tailscale | ![stable](https://img.shields.io/badge/-stable-8a919f?style=flat-square) |
+| ghcr.io/usememos/memos | ![0.29.1](https://img.shields.io/badge/-0.29.1-3da95e?style=flat-square) |
+| joxit/docker-registry-ui | ![main](https://img.shields.io/badge/-main-8a919f?style=flat-square) |
+| metacubex/mihomo | ![latest](https://img.shields.io/badge/-latest-4470c4?style=flat-square) |
+| registry | ![3](https://img.shields.io/badge/-3-3da95e?style=flat-square) |
 
 <!-- IMAGES_TABLE_END -->
 
