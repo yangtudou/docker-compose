@@ -8,21 +8,21 @@
 
 <!-- IMAGES_TABLE_START -->
 
-| # | 镜像名称 | 标签 |
+| # | 🐳 镜像名称 (Container) | ✦ 标签 (Tag) |
 | :-: | :--- | :-: |
-| **01** | cloudflare/cloudflared | latest |
-| **02** | gdy666/lucky | v2 |
-| **03** | ghcr.io/dani-garcia/vaultwarden | latest |
-| **04** | ghcr.io/finb/bark-server | latest |
-| **05** | ghcr.io/hacdias/webdav | latest |
-| **06** | ghcr.io/sagernet/sing-box | latest |
-| **07** | ghcr.io/sagernet/sing-box | latest-testing |
-| **08** | ghcr.io/shadowsocks/ssserver-rust | latest |
-| **09** | ghcr.io/tailscale/tailscale | stable |
-| **10** | ghcr.io/usememos/memos | 0.29.1 |
-| **11** | joxit/docker-registry-ui | main |
-| **12** | metacubex/mihomo | latest |
-| **13** | registry | 3 |
+| **01** | cloudflare/cloudflared | ![latest](https://img.shields.io/badge/tag-latest-blue?style=flat-square) |
+| **02** | gdy666/lucky | ![v2](https://img.shields.io/badge/tag-v2-brightgreen?style=flat-square) |
+| **03** | ghcr.io/dani-garcia/vaultwarden | ![latest](https://img.shields.io/badge/tag-latest-blue?style=flat-square) |
+| **04** | ghcr.io/finb/bark-server | ![latest](https://img.shields.io/badge/tag-latest-blue?style=flat-square) |
+| **05** | ghcr.io/hacdias/webdav | ![latest](https://img.shields.io/badge/tag-latest-blue?style=flat-square) |
+| **06** | ghcr.io/sagernet/sing-box | ![latest](https://img.shields.io/badge/tag-latest-blue?style=flat-square) |
+| **07** | ghcr.io/sagernet/sing-box | ![latest-testing](https://img.shields.io/badge/tag-latest--testing-orange?style=flat-square) |
+| **08** | ghcr.io/shadowsocks/ssserver-rust | ![latest](https://img.shields.io/badge/tag-latest-blue?style=flat-square) |
+| **09** | ghcr.io/tailscale/tailscale | ![stable](https://img.shields.io/badge/tag-stable-orange?style=flat-square) |
+| **10** | ghcr.io/usememos/memos | ![0.29.1](https://img.shields.io/badge/tag-0.29.1-brightgreen?style=flat-square) |
+| **11** | joxit/docker-registry-ui | ![main](https://img.shields.io/badge/tag-main-orange?style=flat-square) |
+| **12** | metacubex/mihomo | ![latest](https://img.shields.io/badge/tag-latest-blue?style=flat-square) |
+| **13** | registry | ![3](https://img.shields.io/badge/tag-3-brightgreen?style=flat-square) |
 
 <!-- IMAGES_TABLE_END -->
 
