@@ -7,6 +7,24 @@
 > 镜像通过 github action 同步到阿里云私有仓库
 
 <!-- IMAGES_TABLE_START -->
+
+- `cloudflare/cloudflared:latest`
+- `gdy666/lucky:v2`
+- `metacubex/mihomo:latest`
+- `joxit/docker-registry-ui:main`
+- `registry:3`
+- `ghcr.io/tailscale/tailscale:stable`
+- `ghcr.io/sagernet/sing-box:latest`
+- `ghcr.io/sagernet/sing-box:latest-testing`
+- `ghcr.io/hacdias/webdav:latest`
+- `ghcr.io/shadowsocks/ssserver-rust:latest`
+- `ghcr.io/dani-garcia/vaultwarden:latest`
+- `ghcr.io/finb/bark-server:latest`
+- `ghcr.io/usememos/memos:0.29.1`
+- `# ghcr.io/caddy-dns/cloudflare:latest`
+- `# ghcr.io/jellyfin/jellyfin:latest`
+- `# ghcr.io/userdocs/iperf3-static:latest`
+
 <!-- IMAGES_TABLE_END -->
 
 ## 一把梭
