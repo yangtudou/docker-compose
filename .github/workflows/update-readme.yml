@@ -23,7 +23,7 @@ jobs:
           import os
           import urllib.parse
 
-          # 1. 检查文件
+          # 1. 检查文件是否存在
           if not os.path.exists('images.txt'):
               print("未找到 images.txt，跳过更新。")
               exit(0)
@@ -40,34 +40,43 @@ jobs:
           # 3. 按 A-Z 重新排序
           images.sort()
 
-          # 4. 构建带 Shields 徽章的 Markdown 表格
-          table = "| # | 🐳 镜像名称 (Container) | ✦ 标签 (Tag) |\n"
-          table += "| :-: | :--- | :-: |\n"
+          # 4. 构建无序号、单色徽章的双列 Markdown 表格
+          table = "| 镜像名称 | 标签 |\n"
+          table += "| :--- | :-: |\n"
 
-          for idx, img in enumerate(images, 1):
+          for img in images:
+              # 拆分镜像名和 tag
               if ':' in img:
                   name, tag = img.rsplit(':', 1)
               else:
                   name, tag = img, 'latest'
               
-              # Shields.io 转义规则：双写减号 '--'，双写下划线 '__'
+              # 镜像名优化：去掉冗余的 docker.io/ 或 library/ 前缀
+              if name.startswith('library/'):
+                  name = name[len('library/'):]
+              elif name.startswith('docker.io/library/'):
+                  name = name[len('docker.io/library/'):]
+              elif name.startswith('docker.io/'):
+                  name = name[len('docker.io/'):]
+              
+              # Shields.io 单标签转义与编码
               safe_tag = tag.replace('-', '--').replace('_', '__')
-              # 进行 URL 编码防止特殊字符导致图片加载失败
               encoded_tag = urllib.parse.quote(safe_tag)
               
-              # 智能配色逻辑
+              # 智能配色
               if tag == 'latest':
-                  color = 'blue'
-              elif any(char.isdigit() for char in tag):  # 包含数字，一般是版本号
-                  color = 'brightgreen'
+                  color = '4470c4'  # 质感深蓝
+              elif any(char.isdigit() for char in tag):
+                  color = '3da95e'  # 极客大厂绿
               else:
-                  color = 'orange'  # 比如 alpine, slim 等变体用橙色
+                  color = '8a919f'  # 优雅高级灰
               
-              # 生成 Shields.io 徽章 Markdown (使用简洁的 flat-square 风格)
-              badge_url = f"https://img.shields.io/badge/tag-{encoded_tag}-{color}?style=flat-square"
+              # 💡 关键修复：在 {encoded_tag} 前面加上一个减号 `-`
+              # 这样 Shields.io 就会把左边留空，只生成一个纯色的、只有版本号的小药丸！
+              badge_url = f"https://img.shields.io/badge/-{encoded_tag}-{color}?style=flat-square"
               badge_md = f"![{tag}]({badge_url})"
               
-              table += f"| **{idx:02d}** | {name} | {badge_md} |\n"
+              table += f"| {name} | {badge_md} |\n"
 
           # 5. 替换 README.md 中的定位标签
           with open('README.md', 'r', encoding='utf-8') as f:
@@ -83,7 +92,7 @@ jobs:
               
               with open('README.md', 'w', encoding='utf-8') as f:
                   f.write(new_readme)
-              print("README.md 徽章表格已成功生成并更新！")
+              print("README.md 极简徽章表格更新成功！")
           else:
               print("未在 README.md 中找到定位标签，跳过。")
           EOF
@@ -100,6 +109,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "README 没变化，跳过推送。"
           else
-            git commit -m "docs: 自动更新并重排镜像列表 [skip ci]"
+            git commit -m "docs: 自动更新镜像列表 [skip ci]"
             git push origin HEAD:${{ github.ref }}
           fi
