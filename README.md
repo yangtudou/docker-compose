@@ -3,4 +3,13 @@
 
 # 记录 docker 玩法
 
-- 镜像通过 github action 同步到阿里云私有仓库
+> [!TIP] 镜像通过 github action 同步到阿里云私有仓库
+
+
+## 一把梭
+
+### 创建网络
+
+```
+docker network create homelab-net
+```
