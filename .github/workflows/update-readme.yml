@@ -22,12 +22,12 @@ jobs:
           cat << 'EOF' > update_readme.py
           import os
 
-          # 1. 检查 images.txt 是否存在
+          # 1. 检查文件
           if not os.path.exists('images.txt'):
               print("未找到 images.txt，跳过更新。")
               exit(0)
 
-          # 2. 读取并严格过滤：去掉空行，删掉所有包含 '#' 的行
+          # 2. 读取并严格过滤（去掉空行和包含 '#' 的行）
           images = []
           with open('images.txt', 'r', encoding='utf-8') as f:
               for line in f:
@@ -36,25 +36,23 @@ jobs:
                       continue
                   images.append(line)
 
-          # 3. 拼接高颜值、极简精美 Markdown 表格
-          table = "| # | 🐳 镜像名称 (Container Image) | 🏷️ 版本 (Tag) |\n"
+          # 3. 按镜像名字母顺序 A-Z 重新排序
+          images.sort()
+
+          # 4. 构建高颜值几何风 Markdown 表格
+          table = "| # | 🐳 镜像名称 (Container) | ✦ 标签 (Tag) |\n"
           table += "| :-: | :--- | :-: |\n"
 
           for idx, img in enumerate(images, 1):
-              # 兼容带端口的私有仓库（如 registry:5000/image:v1）的 tag 拆分
+              # 简化版拆分逻辑：不考虑私有库端口，直接按最后一个冒号切分
               if ':' in img:
-                  parts = img.rsplit(':', 1)
-                  if '/' in parts[1]:  # 说明冒号是端口号（如 registry:5000/image），没有 tag
-                      name, tag = img, 'latest'
-                  else:
-                      name, tag = parts[0], parts[1]
+                  name, tag = img.rsplit(':', 1)
               else:
                   name, tag = img, 'latest'
               
-              # 序号使用双位数对齐（如 01, 02），整体排版极度舒适
               table += f"| **{idx:02d}** | `{name}` | `{tag}` |\n"
 
-          # 4. 替换 README.md 中的内容
+          # 5. 替换 README.md 占位符
           with open('README.md', 'r', encoding='utf-8') as f:
               readme = f.read()
 
@@ -68,7 +66,7 @@ jobs:
               
               with open('README.md', 'w', encoding='utf-8') as f:
                   f.write(new_readme)
-              print("README.md 极简精美表格更新成功！")
+              print("README.md 极简精美表格已按 A-Z 顺序重排并成功更新！")
           else:
               print("未在 README.md 中找到定位标签，跳过。")
           EOF
@@ -85,6 +83,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "README 没变化，跳过推送。"
           else
-            git commit -m "docs: 自动更新精美镜像列表 [skip ci]"
+            git commit -m "docs: 自动更新并重排镜像列表 [skip ci]"
             git push origin HEAD:${{ github.ref }}
           fi
