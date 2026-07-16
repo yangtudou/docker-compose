@@ -27,7 +27,10 @@ ghcr.io/finb/bark-server:latest
 # memos 移动端支持后端版本
 ghcr.io/usememos/memos:0.29.1
 
+# 这个caddy 镜像带有cloudflare DNS-01 验证，申请证书好用
 # ghcr.io/caddy-dns/cloudflare:latest
+
+# jellyfin 镜像太大了 
 ghcr.io/jellyfin/jellyfin:latest
 # ghcr.io/userdocs/iperf3-static:latest
 
