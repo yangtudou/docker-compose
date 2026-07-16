@@ -8,21 +8,21 @@
 
 <!-- IMAGES_TABLE_START -->
 
-| # | 🐳 镜像名称 (Container Image) | 🏷️ 版本 (Tag) |
+| # | 🐳 镜像名称 (Container) | ✦ 标签 (Tag) |
 | :-: | :--- | :-: |
 | **01** | `cloudflare/cloudflared` | `latest` |
 | **02** | `gdy666/lucky` | `v2` |
-| **03** | `metacubex/mihomo` | `latest` |
-| **04** | `joxit/docker-registry-ui` | `main` |
-| **05** | `registry` | `3` |
-| **06** | `ghcr.io/tailscale/tailscale` | `stable` |
-| **07** | `ghcr.io/sagernet/sing-box` | `latest` |
-| **08** | `ghcr.io/sagernet/sing-box` | `latest-testing` |
-| **09** | `ghcr.io/hacdias/webdav` | `latest` |
-| **10** | `ghcr.io/shadowsocks/ssserver-rust` | `latest` |
-| **11** | `ghcr.io/dani-garcia/vaultwarden` | `latest` |
-| **12** | `ghcr.io/finb/bark-server` | `latest` |
-| **13** | `ghcr.io/usememos/memos` | `0.29.1` |
+| **03** | `ghcr.io/dani-garcia/vaultwarden` | `latest` |
+| **04** | `ghcr.io/finb/bark-server` | `latest` |
+| **05** | `ghcr.io/hacdias/webdav` | `latest` |
+| **06** | `ghcr.io/sagernet/sing-box` | `latest` |
+| **07** | `ghcr.io/sagernet/sing-box` | `latest-testing` |
+| **08** | `ghcr.io/shadowsocks/ssserver-rust` | `latest` |
+| **09** | `ghcr.io/tailscale/tailscale` | `stable` |
+| **10** | `ghcr.io/usememos/memos` | `0.29.1` |
+| **11** | `joxit/docker-registry-ui` | `main` |
+| **12** | `metacubex/mihomo` | `latest` |
+| **13** | `registry` | `3` |
 
 <!-- IMAGES_TABLE_END -->
 
