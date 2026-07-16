@@ -6,6 +6,8 @@
 > [!TIP]
 > 镜像通过 github action 同步到阿里云私有仓库
 
+<!-- IMAGES_TABLE_START -->
+<!-- IMAGES_TABLE_END -->
 
 ## 一把梭
 
