@@ -15,28 +15,28 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
 
-      - name: Scan Docker Compose & Generate images.txt
-        run: |
-          find . -type f \( -name "docker-compose.yaml" -o -name "docker-compose.yml" \) -print0 | \
-          xargs -0 grep -h -E '^[[:space:]]*image:[[:space:]]*' | \
-          sed -E 's/[[:space:]]*#.*$//' | \
-          sed -E 's/^[[:space:]]*image:[[:space:]]*//' | \
-          sed -E 's/^["'\'']//; s/["'\'']$//' | \
-          grep -v '^$' | \
-          sort -u > images.txt
+      # - name: Scan Docker Compose & Generate images.txt
+      #   run: |
+      #     find . -type f \( -name "docker-compose.yaml" -o -name "docker-compose.yml" \) -print0 | \
+      #     xargs -0 grep -h -E '^[[:space:]]*image:[[:space:]]*' | \
+      #     sed -E 's/[[:space:]]*#.*$//' | \
+      #     sed -E 's/^[[:space:]]*image:[[:space:]]*//' | \
+      #     sed -E 's/^["'\'']//; s/["'\'']$//' | \
+      #     grep -v '^$' | \
+      #     sort -u > images.txt
           
-          echo "=== 扫描完成，生成的 images.txt 内容如下 ==="
-          cat images.txt
+      #     echo "=== 扫描完成，生成的 images.txt 内容如下 ==="
+      #     cat images.txt
       
-      # - name: Log in to Aliyun Registry
-      #   uses: docker/login-action@v4
-      #   with:
-      #     registry: ${{ secrets.ALIYUN_REGISTRY_DOMAIN }}
-      #     username: ${{ secrets.ALIYUN_USERNAME }}
-      #     password: ${{ secrets.ALIYUN_PASSWORD }}
+      - name: Log in to Aliyun Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ secrets.ALIYUN_REGISTRY_DOMAIN }}
+          username: ${{ secrets.ALIYUN_USERNAME }}
+          password: ${{ secrets.ALIYUN_PASSWORD }}
 
-      # - name: registry-sync
-      #   uses: yangtudou/registry-sync@main
-      #   with:
-      #     dst-prefix: ${{ secrets.ALIYUN_REGISTRY_DOMAIN }}/${{ secrets.ALIYUN_REGISTRY_SPACE_NAME }}
-      #     dst-flatten: true
+      - name: registry-sync
+        uses: yangtudou/registry-sync@main
+        with:
+          dst-prefix: ${{ secrets.ALIYUN_REGISTRY_DOMAIN }}/${{ secrets.ALIYUN_REGISTRY_SPACE_NAME }}
+          dst-flatten: true
