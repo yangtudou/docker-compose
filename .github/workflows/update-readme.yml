@@ -22,18 +22,34 @@ jobs:
           cat << 'EOF' > update_readme.py
           import os
 
-          # 检查 images.txt 是否存在
+          # 1. 检查 images.txt 是否存在
           if not os.path.exists('images.txt'):
               print("未找到 images.txt，跳过更新。")
               exit(0)
 
-          # 读取镜像列表并格式化为 markdown 列表
+          # 2. 读取并过滤：去掉空行，删掉所有包含 '#' 的行
+          images = []
           with open('images.txt', 'r', encoding='utf-8') as f:
-              images = [line.strip() for line in f if line.strip()]
+              for line in f:
+                  line = line.strip()
+                  if not line or '#' in line:
+                      continue
+                  images.append(line)
 
-          # 简单直接：直接生成 - `xxx` 的无序列表
-          markdown_list = "\n".join([f"- `{img}`" for img in images])
+          # 3. 拼接一个高颜值的 Markdown 表格
+          table = "| 序号 | 📦 镜像名称 (Image) | 🏷️ 版本 (Tag) | ⚡ 状态 (Status) |\n"
+          table += "| :---: | :--- | :---: | :---: |\n"
 
+          for idx, img in enumerate(images, 1):
+              # 自动拆分镜像名和 Tag，如果没有 Tag 默认写 latest
+              if ':' in img:
+                  name, tag = img.rsplit(':', 1)
+              else:
+                  name, tag = img, 'latest'
+              
+              table += f"| {idx} | `{name}` | `{tag}` | 🟢 已同步 |\n"
+
+          # 4. 替换 README.md 中的内容
           with open('README.md', 'r', encoding='utf-8') as f:
               readme = f.read()
 
@@ -43,11 +59,11 @@ jobs:
           if start_tag in readme and end_tag in readme:
               before = readme.split(start_tag)[0]
               after = readme.split(end_tag)[1]
-              new_readme = before + start_tag + '\n\n' + markdown_list + '\n\n' + end_tag + after
+              new_readme = before + start_tag + '\n\n' + table + '\n' + end_tag + after
               
               with open('README.md', 'w', encoding='utf-8') as f:
                   f.write(new_readme)
-              print("README.md 里的镜像列表已成功更新！")
+              print("README.md 中的镜像表格已更新（已剔除未同步镜像）！")
           else:
               print("未在 README.md 中找到定位标签，跳过。")
           EOF
@@ -64,6 +80,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "README 没变化，跳过推送。"
           else
-            git commit -m "docs: 自动更新镜像列表 [skip ci]"
+            git commit -m "docs: 自动更新精美镜像列表 [skip ci]"
             git push origin HEAD:${{ github.ref }}
           fi
