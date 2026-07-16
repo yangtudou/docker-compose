@@ -1,21 +1,35 @@
 services:
-  
   dockge:
     image: louislam/dockge:1
     container_name: dockge
     restart: unless-stopped
-        
+    
     expose:
-      - "5001"
-        
+      - 5001
+    
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./data:/app/data
-      
+      - /var/run/docker.sock:/var/run/docker.sock   # 挂载 Docker 套接字，让 Dockge 能控制宿主机的 Docker
+      - ./data:/app/data                            # 存储 Dockge 自身的数据
+
+      # 如果你需要使用私有镜像仓库（比如阿里云）
+      # 你需要把你的认证文件共享给 Dockge
+      # - /root/.docker/:/root/.docker
+
+      # 存放 Stacks（容器项目）的目录
+      # ⚠️ 宿主机和容器内的路径必须完全一致!
+      # ⚠️ 如果路径错误，你的数据可能会被写到错误的地方!
+      # ✔️ 正确示范： - /opt/stacks:/opt/stacks (两边路径要匹配)
+      # ❌ 错误示范： - /docker:/opt/stacks (两边路径不匹配)
       - ${DOCKER_PATH}:${DOCKER_PATH}
-        
+    
     environment:
-      DOCKGE_STACKS_DIR: ${DOCKER_PATH}
+      # 告诉 Dockge 你的 Stacks 目录在哪里
+      # 同上面的映射
+      - DOCKGE_STACKS_DIR=${DOCKER_PATH}
+      
+      # 必须同时设置 PUID 和 PGID，Dockge 才会接管权限
+      - PUID=1000
+      - PGID=1000
 
     networks:
       - homelab-net
