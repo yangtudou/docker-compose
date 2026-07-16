@@ -21,8 +21,9 @@ jobs:
         run: |
           cat << 'EOF' > update_readme.py
           import os
+          import urllib.parse
 
-          # 1. 检查文件是否存在
+          # 1. 检查文件
           if not os.path.exists('images.txt'):
               print("未找到 images.txt，跳过更新。")
               exit(0)
@@ -39,19 +40,34 @@ jobs:
           # 3. 按 A-Z 重新排序
           images.sort()
 
-          # 4. 构建无代码块、无 Emoji 的极简 Markdown 表格
-          table = "| # | 镜像名称 | 标签 |\n"
+          # 4. 构建带 Shields 徽章的 Markdown 表格
+          table = "| # | 🐳 镜像名称 (Container) | ✦ 标签 (Tag) |\n"
           table += "| :-: | :--- | :-: |\n"
 
           for idx, img in enumerate(images, 1):
-              # 极简拆分逻辑
               if ':' in img:
                   name, tag = img.rsplit(':', 1)
               else:
                   name, tag = img, 'latest'
               
-              # 去掉所有反引号，序号加粗以作视觉区隔
-              table += f"| **{idx:02d}** | {name} | {tag} |\n"
+              # Shields.io 转义规则：双写减号 '--'，双写下划线 '__'
+              safe_tag = tag.replace('-', '--').replace('_', '__')
+              # 进行 URL 编码防止特殊字符导致图片加载失败
+              encoded_tag = urllib.parse.quote(safe_tag)
+              
+              # 智能配色逻辑
+              if tag == 'latest':
+                  color = 'blue'
+              elif any(char.isdigit() for char in tag):  # 包含数字，一般是版本号
+                  color = 'brightgreen'
+              else:
+                  color = 'orange'  # 比如 alpine, slim 等变体用橙色
+              
+              # 生成 Shields.io 徽章 Markdown (使用简洁的 flat-square 风格)
+              badge_url = f"https://img.shields.io/badge/tag-{encoded_tag}-{color}?style=flat-square"
+              badge_md = f"![{tag}]({badge_url})"
+              
+              table += f"| **{idx:02d}** | {name} | {badge_md} |\n"
 
           # 5. 替换 README.md 中的定位标签
           with open('README.md', 'r', encoding='utf-8') as f:
@@ -67,7 +83,7 @@ jobs:
               
               with open('README.md', 'w', encoding='utf-8') as f:
                   f.write(new_readme)
-              print("README.md 极简表格更新成功！")
+              print("README.md 徽章表格已成功生成并更新！")
           else:
               print("未在 README.md 中找到定位标签，跳过。")
           EOF
