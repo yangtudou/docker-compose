@@ -4,6 +4,7 @@ joxit/docker-registry-ui:main
 
 gdy666/lucky:v2
 
+# 这两个镜像拉取时间也很慢
 louislam/dockge:1
 louislam/uptime-kuma:2
 
