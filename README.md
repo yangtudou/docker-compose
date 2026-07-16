@@ -8,22 +8,21 @@
 
 <!-- IMAGES_TABLE_START -->
 
-- `cloudflare/cloudflared:latest`
-- `gdy666/lucky:v2`
-- `metacubex/mihomo:latest`
-- `joxit/docker-registry-ui:main`
-- `registry:3`
-- `ghcr.io/tailscale/tailscale:stable`
-- `ghcr.io/sagernet/sing-box:latest`
-- `ghcr.io/sagernet/sing-box:latest-testing`
-- `ghcr.io/hacdias/webdav:latest`
-- `ghcr.io/shadowsocks/ssserver-rust:latest`
-- `ghcr.io/dani-garcia/vaultwarden:latest`
-- `ghcr.io/finb/bark-server:latest`
-- `ghcr.io/usememos/memos:0.29.1`
-- `# ghcr.io/caddy-dns/cloudflare:latest`
-- `# ghcr.io/jellyfin/jellyfin:latest`
-- `# ghcr.io/userdocs/iperf3-static:latest`
+| 序号 | 📦 镜像名称 (Image) | 🏷️ 版本 (Tag) | ⚡ 状态 (Status) |
+| :---: | :--- | :---: | :---: |
+| 1 | `cloudflare/cloudflared` | `latest` | 🟢 已同步 |
+| 2 | `gdy666/lucky` | `v2` | 🟢 已同步 |
+| 3 | `metacubex/mihomo` | `latest` | 🟢 已同步 |
+| 4 | `joxit/docker-registry-ui` | `main` | 🟢 已同步 |
+| 5 | `registry` | `3` | 🟢 已同步 |
+| 6 | `ghcr.io/tailscale/tailscale` | `stable` | 🟢 已同步 |
+| 7 | `ghcr.io/sagernet/sing-box` | `latest` | 🟢 已同步 |
+| 8 | `ghcr.io/sagernet/sing-box` | `latest-testing` | 🟢 已同步 |
+| 9 | `ghcr.io/hacdias/webdav` | `latest` | 🟢 已同步 |
+| 10 | `ghcr.io/shadowsocks/ssserver-rust` | `latest` | 🟢 已同步 |
+| 11 | `ghcr.io/dani-garcia/vaultwarden` | `latest` | 🟢 已同步 |
+| 12 | `ghcr.io/finb/bark-server` | `latest` | 🟢 已同步 |
+| 13 | `ghcr.io/usememos/memos` | `0.29.1` | 🟢 已同步 |
 
 <!-- IMAGES_TABLE_END -->
 
