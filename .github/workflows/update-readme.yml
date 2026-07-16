@@ -40,18 +40,20 @@ jobs:
           # 3. 按 A-Z 重新排序
           images.sort()
 
-          # 4. 构建无序号、单色徽章的双列 Markdown 表格
-          table = "| 镜像名称 | 标签 |\n"
-          table += "| :--- | :-: |\n"
+          def escape_shields(text):
+              # Shields.io 规则：- 转义为 --，_ 转义为 __，然后进行 URL 编码（处理斜杠 / 等）
+              escaped = text.replace('_', '__').replace('-', '--')
+              return urllib.parse.quote(escaped)
 
+          # 4. 拼接纯徽章列表
+          badge_list = []
           for img in images:
-              # 拆分镜像名和 tag
               if ':' in img:
                   name, tag = img.rsplit(':', 1)
               else:
                   name, tag = img, 'latest'
               
-              # 镜像名优化：去掉冗余的 docker.io/ 或 library/ 前缀
+              # 镜像名优化：去掉冗余的前缀
               if name.startswith('library/'):
                   name = name[len('library/'):]
               elif name.startswith('docker.io/library/'):
@@ -59,40 +61,41 @@ jobs:
               elif name.startswith('docker.io/'):
                   name = name[len('docker.io/'):]
               
-              # Shields.io 单标签转义与编码
-              safe_tag = tag.replace('-', '--').replace('_', '__')
-              encoded_tag = urllib.parse.quote(safe_tag)
+              # 编码 Shields.io 的 Label 和 Message
+              escaped_name = escape_shields(name)
+              escaped_tag = escape_shields(tag)
               
-              # 智能配色
+              # 根据 Tag 类型智能配色
               if tag == 'latest':
-                  color = '4470c4'  # 质感深蓝
+                  color = 'blue'
               elif any(char.isdigit() for char in tag):
-                  color = '3da95e'  # 极客大厂绿
+                  color = 'green'
               else:
-                  color = '8a919f'  # 优雅高级灰
+                  color = 'orange'
               
-              # 💡 关键修复：在 {encoded_tag} 前面加上一个减号 `-`
-              # 这样 Shields.io 就会把左边留空，只生成一个纯色的、只有版本号的小药丸！
-              badge_url = f"https://img.shields.io/badge/-{encoded_tag}-{color}?style=flat-square"
-              badge_md = f"![{tag}]({badge_url})"
-              
-              table += f"| {name} | {badge_md} |\n"
+              # 拼接为单一徽章：https://img.shields.io/badge/镜像名-标签-颜色?style=flat
+              badge_url = f"https://img.shields.io/badge/{escaped_name}-{escaped_tag}-{color}?style=flat"
+              badge_list.append(f"- ![{img}]({badge_url})")
+
+          # 将所有徽章用换行符连接成极简列表
+          content = "\n".join(badge_list)
 
           # 5. 替换 README.md 中的定位标签
           with open('README.md', 'r', encoding='utf-8') as f:
               readme = f.read()
 
-          start_tag = '<!-- IMAGES_TABLE_START -->'
-          end_tag = '<!-- IMAGES_TABLE_END -->'
+          # 自动兼容新老标签（优先找 LIST 标签，找不到再找 TABLE 标签）
+          start_tag = '<!-- IMAGES_LIST_START -->' if '<!-- IMAGES_LIST_START -->' in readme else '<!-- IMAGES_TABLE_START -->'
+          end_tag = '<!-- IMAGES_LIST_END -->' if '<!-- IMAGES_LIST_END -->' in readme else '<!-- IMAGES_TABLE_END -->'
 
           if start_tag in readme and end_tag in readme:
               before = readme.split(start_tag)[0]
               after = readme.split(end_tag)[1]
-              new_readme = before + start_tag + '\n\n' + table + '\n' + end_tag + after
+              new_readme = before + start_tag + '\n\n' + content + '\n\n' + end_tag + after
               
-              with open('README.md', 'w', encoding='utf-8') as f:
+              with open(readme_path := 'README.md', 'w', encoding='utf-8') as f:
                   f.write(new_readme)
-              print("README.md 极简徽章表格更新成功！")
+              print("README.md 极简徽章列表已成功更新！")
           else:
               print("未在 README.md 中找到定位标签，跳过。")
           EOF
@@ -109,6 +112,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "README 没变化，跳过推送。"
           else
-            git commit -m "docs: 自动更新镜像列表 [skip ci]"
+            git commit -m "docs: 自动更新镜像徽章列表 [skip ci]"
             git push origin HEAD:${{ github.ref }}
           fi
