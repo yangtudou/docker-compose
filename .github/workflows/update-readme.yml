@@ -1,0 +1,69 @@
+name: Update README Images List
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+          persist-credentials: true
+
+      - name: Update README Image List
+        run: |
+          cat << 'EOF' > update_readme.py
+          import os
+
+          # 检查 images.txt 是否存在
+          if not os.path.exists('images.txt'):
+              print("未找到 images.txt，跳过更新。")
+              exit(0)
+
+          # 读取镜像列表并格式化为 markdown 列表
+          with open('images.txt', 'r', encoding='utf-8') as f:
+              images = [line.strip() for line in f if line.strip()]
+
+          # 简单直接：直接生成 - `xxx` 的无序列表
+          markdown_list = "\n".join([f"- `{img}`" for img in images])
+
+          with open('README.md', 'r', encoding='utf-8') as f:
+              readme = f.read()
+
+          start_tag = '<!-- IMAGES_TABLE_START -->'
+          end_tag = '<!-- IMAGES_TABLE_END -->'
+
+          if start_tag in readme and end_tag in readme:
+              before = readme.split(start_tag)[0]
+              after = readme.split(end_tag)[1]
+              new_readme = before + start_tag + '\n\n' + markdown_list + '\n\n' + end_tag + after
+              
+              with open('README.md', 'w', encoding='utf-8') as f:
+                  f.write(new_readme)
+              print("README.md 里的镜像列表已成功更新！")
+          else:
+              print("未在 README.md 中找到定位标签，跳过。")
+          EOF
+
+          python3 update_readme.py
+          rm update_readme.py
+
+      - name: Commit and Push README
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add README.md
+          if git diff --staged --quiet; then
+            echo "README 没变化，跳过推送。"
+          else
+            git commit -m "docs: 自动更新镜像列表 [skip ci]"
+            git push origin HEAD:${{ github.ref }}
+          fi
