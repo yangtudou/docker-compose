@@ -1,0 +1,46 @@
+# Traefik v3.7 全局配置文件
+
+# 仪表盘开关
+api:
+  dashboard: true
+
+# 日志级别
+log:
+  level: INFO
+
+# 容器自动发现
+# 默认不发现，除非加上 labels
+providers:
+  docker:
+    exposedByDefault: false
+
+# 流量入口
+# 当前制所有进入 443 的流量
+# 皆使用名为 cloudflare 的解析器来申请 TLS 证书
+# 覆盖了主域名和子域名泛解析
+entryPoints:
+  websecure:
+    address: ":443"
+    http:
+      tls:
+        certResolver: cloudflare
+        domains:
+          - main: "example.com"
+            sans: [ "*.example.com" ]
+
+# ACME 证书自动化
+# 证书文件存 `/data/acme.json` 同时需要开启读写权限
+# dnsChallenge: 使用 Cloudflare API 完成域名验证
+# CF_DNS_API_TOKEN 需要写入 env
+# delayBeforeChecks: 等待 10 秒，
+# 是为了等 Cloudflare 的 DNS 记录在全球同步好，
+# 减少因为“查不到记录”导致的申请失败
+certificatesResolvers:
+  cloudflare:
+    acme:
+      email: traefik@example.com
+      storage: /data/acme.json
+      dnsChallenge:
+        provider: cloudflare
+        propagation:
+          delayBeforeChecks: 10s
