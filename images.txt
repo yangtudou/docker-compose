@@ -1,5 +1,6 @@
 # ========== docker.io 镜像仓库 ========== #
 library/registry:3
+library/traefik:v3.7
 joxit/docker-registry-ui:main
 
 gdy666/lucky:v2
@@ -35,4 +36,6 @@ ghcr.io/usememos/memos:0.29.1
 # 最简单的方法是本地先推一遍
 ghcr.io/jellyfin/jellyfin:latest
 # ghcr.io/userdocs/iperf3-static:latest
+
+ghcr.io/tecnativa/docker-socket-proxy:0.4.2
 
