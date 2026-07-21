@@ -8,16 +8,16 @@ gdy666/lucky:v2: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/lucky:v
 louislam/dockge:1: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/dockge:1
 louislam/uptime-kuma:2: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/uptime-kuma:2
 
-cloudflare/cloudflared: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/cloudflared
-metacubex/mihomo: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/mihomo
+cloudflare/cloudflared:latest: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/cloudflared:latest
+metacubex/mihomo:latest: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/mihomo:latest
 tecnativa/docker-socket-proxy:0.4.2: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/docker-socket-proxy:0.4.2
 
 # ========== github 镜像仓库 ========== #
 ghcr.io/tailscale/tailscale:stable: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/tailscale:stable
-ghcr.io/hacdias/webdav: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/webdav
-ghcr.io/dani-garcia/vaultwarden: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/vaultwarden
-ghcr.io/finb/bark-server: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/bark-server
+ghcr.io/hacdias/webdav:latest: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/webdav:latest
+ghcr.io/dani-garcia/vaultwarden:latest: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/vaultwarden:latest
+ghcr.io/finb/bark-serve:latestr: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/bark-server:latest
 ghcr.io/usememos/memos:0.29.1: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/memos:0.29.1
-ghcr.io/jellyfin/jellyfin: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/jellyfin
-ghcr.io/userdocs/iperf3-static: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/iperf3-static
+ghcr.io/jellyfin/jellyfin:latest: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/jellyfin:latest
+ghcr.io/userdocs/iperf3-static:latest: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/iperf3-static:latest
 ghcr.io/sagernet/sing-box:latest,latest-testing: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/sing-box

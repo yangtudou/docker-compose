@@ -33,7 +33,6 @@ jobs:
         with:
           auth_file: ./auth.yaml
           images_file: ./images.yaml
-          version: latest
           proc: 6
           os: linux
           arch: amd64
