@@ -1,3 +1,0 @@
-${ALIYUN_REGISTRY_DOMAIN}:
-  username: ${ALIYUN_USERNAME}
-  password: ${ALIYUN_PASSWORD}
