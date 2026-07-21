@@ -1,4 +1,4 @@
-[![同步镜像到阿里](https://github.com/yangtudou/docker-compose/actions/workflows/registry-sync.yml/badge.svg?event=workflow_dispatch)](https://github.com/yangtudou/docker-compose/actions/workflows/registry-sync.yml)
+[![镜像同步](https://github.com/yangtudou/docker-compose/actions/workflows/registry-sync.yml/badge.svg?event=workflow_dispatch)](https://github.com/yangtudou/docker-compose/actions/workflows/registry-sync.yml)
 
 # 记录 docker 玩法
 
