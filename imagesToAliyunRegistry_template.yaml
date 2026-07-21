@@ -16,7 +16,7 @@ tecnativa/docker-socket-proxy:0.4.2: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY
 ghcr.io/tailscale/tailscale:stable: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/tailscale:stable
 ghcr.io/hacdias/webdav:latest: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/webdav:latest
 ghcr.io/dani-garcia/vaultwarden:latest: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/vaultwarden:latest
-ghcr.io/finb/bark-serve:latestr: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/bark-server:latest
+ghcr.io/finb/bark-serve:latest: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/bark-server:latest
 ghcr.io/usememos/memos:0.29.1: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/memos:0.29.1
 ghcr.io/jellyfin/jellyfin:latest: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/jellyfin:latest
 ghcr.io/userdocs/iperf3-static:latest: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/iperf3-static:latest
