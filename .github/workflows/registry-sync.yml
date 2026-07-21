@@ -31,10 +31,10 @@ jobs:
       - name: Sync Images
         uses: hhyasdf/image-sync-action@v1.1
         with:
-          auth_file: ./auth.yaml # 登入信息
-          images_file: ./images.json # 映射
-          version: latest # 如果没有指定
-          proc: 4 # 并发
+          auth_file: ./auth.json
+          images_file: ./images.json
+          version: latest
+          proc: 4
           os: linux
           arch: amd64
 
