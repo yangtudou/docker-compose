@@ -1,4 +1,4 @@
-name: Sync Docker Images To Aliyun
+name: 同步镜像到阿里
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   sync:
-    name: 同步镜像到阿里
+    name: Start Jobs
     runs-on: ubuntu-latest
 
     steps:
@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
 
-      - name: 动态生成 auth.yaml
+      - name: Set Config
         env:
           ALIYUN_REGISTRY_SPACE_NAME: ${{ secrets.ALIYUN_REGISTRY_SPACE_NAME }}
           ALIYUN_REGISTRY_DOMAIN: ${{ secrets.ALIYUN_REGISTRY_DOMAIN }}
@@ -33,7 +33,7 @@ jobs:
 
           envsubst < images.json > images_rendered.json
 
-      - name: 同步镜像
+      - name: Sync Images
         uses: hhyasdf/image-sync-action@v1.1
         with:
           auth_file: ./auth.yaml # 登入信息
