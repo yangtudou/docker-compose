@@ -31,6 +31,8 @@ jobs:
           images_file: ./images.json # 映射
           version: latest # 如果没有指定
           proc: 4 # 并发
+          os: linux
+          arch: amd64
 
       - name: Cleanup Old Workflow Runs
         if: always()
