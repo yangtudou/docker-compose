@@ -10,10 +10,11 @@ louislam/uptime-kuma:2: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/
 
 cloudflare/cloudflared:latest: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/cloudflared:latest
 metacubex/mihomo:latest: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/mihomo:latest
-finb/bark-serve:latest: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/bark-server:latest
+
 tecnativa/docker-socket-proxy:master: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/docker-socket-proxy:master
 
 # ========== github 镜像仓库 ========== #
+ghcr.io/finb/bark-server:latest: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/bark-server:latest
 ghcr.io/tailscale/tailscale:stable: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/tailscale:stable
 ghcr.io/hacdias/webdav:latest: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/webdav:latest
 ghcr.io/dani-garcia/vaultwarden:latest: ${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/vaultwarden:latest
