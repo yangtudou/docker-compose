@@ -1,4 +1,4 @@
-name: 同步镜像到阿里
+name: Sync Aliyun Registry
 
 on:
   workflow_dispatch:
@@ -25,16 +25,16 @@ jobs:
           ALIYUN_USERNAME: ${{ secrets.ALIYUN_USERNAME }}
           ALIYUN_PASSWORD: ${{ secrets.ALIYUN_PASSWORD }}
         run: |
-          envsubst < auth.template.json > auth.json
-          envsubst < images.tempplate.json > images.json
+          envsubst < auth_template.yaml > auth.yaml
+          envsubst < imagesToAliyunRegistry_template.yaml > images.yaml
 
       - name: Sync Images
         uses: hhyasdf/image-sync-action@v1.1
         with:
-          auth_file: ./auth.json
-          images_file: ./images.json
+          auth_file: ./auth.yaml
+          images_file: ./images.yaml
           version: latest
-          proc: 4
+          proc: 6
           os: linux
           arch: amd64
 

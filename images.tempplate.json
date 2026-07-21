@@ -1,4 +1,0 @@
-{
-    "library/registry:3": "${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/registry:3",
-    "ghcr.io/sagernet/sing-box:latest,latest-testing": "${ALIYUN_REGISTRY_DOMAIN}/${ALIYUN_REGISTRY_SPACE_NAME}/sing-box"
-}
