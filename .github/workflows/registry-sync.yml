@@ -25,19 +25,14 @@ jobs:
           ALIYUN_USERNAME: ${{ secrets.ALIYUN_USERNAME }}
           ALIYUN_PASSWORD: ${{ secrets.ALIYUN_PASSWORD }}
         run: |
-          cat <<EOF > auth.yaml
-          ${ALIYUN_REGISTRY_DOMAIN}:
-            username: ${ALIYUN_USERNAME}
-            password: ${ALIYUN_PASSWORD}
-          EOF
-
-          envsubst < images.json > images_rendered.json
+          envsubst < auth.template.json > auth.json
+          envsubst < images.tempplate.json > images.json
 
       - name: Sync Images
         uses: hhyasdf/image-sync-action@v1.1
         with:
           auth_file: ./auth.yaml # 登入信息
-          images_file: ./images_rendered.json # 映射
+          images_file: ./images.json # 映射
           version: latest # 如果没有指定
           proc: 4 # 并发
           os: linux
