@@ -1,22 +1,23 @@
-# ==================== 1. 配置非敏感环境变量 ====================
-# 1. 空间名 ( Namespace )
-$env:ALIYUN_REGISTRY_SPACE_NAME = "<spacename>"
+# ==================== 配置非敏感环境变量 ====================
 
-# 2. Registry 域名 ( 绝对不能带 :// ！！例如 registry.cn-hangzhou.aliyuncs.com )
 $env:ALIYUN_REGISTRY_DOMAIN     = "<aliyun_registry_domain>"
+$env:ALIYUN_REGISTRY_SPACE_NAME = "<spacename>"
+$env:LOCAL_REGISTRY_DIMAIN      = "<local_registry_domain>"
 
 
-# ==================== 2. 账号密码强制交互输入 (不填直接罢工) ====================
-# 1. 输入用户名
-$inputUser = Read-Host -Prompt "👤 请输入 Aliyun 用户名"
+
+# ==================== 账号密码强制交互输入 ====================
+
+$inputUser = Read-Host -Prompt "👤 请输入 Aliyun 私有仓库用户名"
+
 if ([string]::IsNullOrWhiteSpace($inputUser)) {
     Write-Warning "🛑 未检测到用户名输入，脚本已安全终止！"
     return
 }
 $env:ALIYUN_USERNAME = $inputUser.Trim()
 
-# 2. 输入密码 (密文显示 ****)
-$secPass   = Read-Host -Prompt "🔐 请输入 Aliyun 密码" -AsSecureString
+
+$secPass   = Read-Host -Prompt "🔐 请输入 Aliyun 私有仓库密码" -AsSecureString
 $BSTR      = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($secPass)
 $inputPass = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
 
@@ -28,7 +29,8 @@ if ([string]::IsNullOrWhiteSpace($inputPass)) {
 $env:ALIYUN_PASSWORD = $inputPass
 
 
-# ==================== 3. 匹配并渲染所有 *.tmp 模板 ====================
+# ==================== 匹配并渲染所有 *.tmp 模板 ====================
+
 $templateFiles = Get-ChildItem -Path "." -Filter "*.tmp" -File
 
 if (-not $templateFiles) {
@@ -40,23 +42,23 @@ if (-not $templateFiles) {
 
 $tempGeneratedFiles = [System.Collections.Generic.List[string]]::new()
 
+
 try {
-    # 渲染模板生成 .yaml 文件
     foreach ($file in $templateFiles) {
         $outputFile = $file.FullName -replace '(\.yaml)?\.tmp$', '.yaml'
         
         $content = Get-Content -Path $file.FullName -Raw -Encoding UTF8
         
-        # 1. 替换 ${VAR} 环境变量
+        # 替换 ${VAR} 环境变量
         $newContent = [regex]::Replace($content, '\$\{([^}]+)\}', {
             param($m)
             $val = [Environment]::GetEnvironmentVariable($m.Groups[1].Value)
             if ([string]::IsNullOrEmpty($val)) { $m.Value } else { $val }
         })
 
-        # 🎯 2. 精准匹配引号内的完整 Key/Value，完美保留版本号冒号
+        # 精准匹配引号内的完整 Key/Value，完美保留版本号冒号
         if ($file.Name -like "*images*") {
-            $prefix = "registry.local.y3-3am.top"
+            $prefix = $env:LOCAL_REGISTRY_DIMAIN
             $lines = $newContent -split '\r?\n'
             $processedLines = [System.Collections.Generic.List[string]]::new()
 
@@ -74,7 +76,7 @@ try {
                     continue
                 }
 
-                # 1. 优先匹配双引号包裹的 "Key": "Value"（完整提取包含冒号的 Tag）
+                # 优先匹配双引号包裹的 "Key": "Value"（完整提取包含冒号的 Tag）
                 if ($trimmed -match '^\s*"([^"]+)"\s*:\s*"([^"]+)"\s*,?\s*$') {
                     $oldKey   = $Matches[1].Trim()
                     $oldVal   = $Matches[2].Trim()
@@ -82,7 +84,7 @@ try {
                     
                     $processedLines.Add("`"$oldVal`": `"$prefix/$cleanKey`"")
                 } 
-                # 2. 兜底匹配无引号格式
+                # 兜底匹配无引号格式
                 elseif ($trimmed -match '^\s*([^:\s]+(?::[^:\s]+)?)\s*:\s*(.+)$') {
                     $oldKey   = $Matches[1].Trim().Trim('"')
                     $oldVal   = $Matches[2].Trim().Trim('"').TrimEnd(',')
@@ -112,26 +114,26 @@ try {
         return
     }
 
-    # ==================== 👁️ 4. 打印预览 + 人工确认卡口 ====================
+    # ==================== 打印预览 + 人工确认卡口 ====================
     Write-Host "`n📋 【临时镜像映射配置预览 ($([System.IO.Path]::GetFileName($imagesFile)))】" -ForegroundColor Magenta
     Write-Host "--------------------------------------------------------------------------------" -ForegroundColor DarkGray
     Get-Content -Path $imagesFile -Encoding UTF8
     Write-Host "--------------------------------------------------------------------------------`n" -ForegroundColor DarkGray
 
-    # 🛑 交互确认：输入 Y 或直接按 Enter 默认确认；输入 N 或其他字符终止
+    # 交互确认：输入 Y 或直接按 Enter 默认确认；输入 N 或其他字符终止
     $confirm = Read-Host -Prompt "❓ 确认上述映射无误并启动同步？[Y/n]"
     if ($confirm.Trim() -and $confirm.Trim() -notmatch '^[Yy]$') {
         Write-Warning "🛑 已取消同步！正在清理现场并安全退出..."
         return
     }
 
-    # ==================== 5. 调用 image-syncer ====================
+    # ==================== 调用 image-syncer ====================
     Write-Host "🚀 正在启动 image-syncer 开始镜像同步..." -ForegroundColor Green
     
     .\image-syncer.exe --proc=6 --auth="$authFile" --images="$imagesFile" --retries=1 --arch amd64 --os linux
 
 } finally {
-    # ==================== 6. 用完即焚 (物理粉碎文件 + 内存清零) ====================
+    # ==================== 用完即焚 (物理粉碎文件 + 内存清零) ====================
     foreach ($tempFile in $tempGeneratedFiles) {
         if (Test-Path $tempFile) {
             Remove-Item -Path $tempFile -Force
