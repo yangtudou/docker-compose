@@ -1,25 +1,36 @@
+sync:
+  - ARC
+
+platform:
+  # - linux/arm64
+  - linux/amd64
+
 dest:
   ARC:
     registry: ${ALIYUN_REGISTRY_DOMAIN}
     namespace: ${ALIYUN_REGISTRY_SPACE_NAME}
     flatten: true
 
-# 全局指定
-sync:
-  - ARC
-platform:
-  - linux/arm64
-
 sources:
   docker.io:
     images:
-      cloudflare/cloudflared:
+      library/registry: 3
+      library/traefik: v3.7
       joxit/docker-registry-ui: main
       gdy666/lucky: v2
+      louislam/dockge: 1
       louislam/uptime-kuma: 2
+      cloudflare/cloudflared:
+      metacubex/mihomo:
+      tecnativa/docker-socket-proxy: master
 
   ghcr.io:
     images:
       finb/bark-server:
+      tailscale/tailscale: stable
+      hacdias/webdav:
+      dani-garcia/vaultwarden:
       usememos/memos: 0.29.1
+      jellyfin/jellyfin:
+      userdocs/iperf3-static:
       sagernet/sing-box: [ latest, latest-testing ]
