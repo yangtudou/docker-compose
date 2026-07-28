@@ -26,7 +26,7 @@ jobs:
         env:
           ALIYUN_REGISTRY_SPACE_NAME: ${{ secrets.ALIYUN_REGISTRY_SPACE_NAME }}
           ALIYUN_REGISTRY_DOMAIN: ${{ secrets.ALIYUN_REGISTRY_DOMAIN }}
-          GHCR_SPACE_NAME: ${github.repository_owner}
+          GHCR_SPACE_NAME: ${{ github.repository_owner }}
           SYNC_CONFIG_TEMPLATE: toAliCR.yaml
         run: |
           set -euo pipefail
