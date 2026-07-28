@@ -1,0 +1,10 @@
+# private
+aliCR-toLocal.yaml
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# cli
+/registry-sync
+registry-sync.exe
