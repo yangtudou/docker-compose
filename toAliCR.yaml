@@ -11,8 +11,16 @@ dest:
     namespace: ${ALIYUN_REGISTRY_SPACE_NAME}
     flatten: true
 
+  GHCR:
+    registry: ghcr.io
+    namespace: ${github.repository_owner}
+    flatten: false
+
 sources:
   docker.io:
+    sync:
+      - AliCR
+      - GHCR
     images:
       library/registry: 3
       library/traefik: v3.7
