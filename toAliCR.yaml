@@ -13,7 +13,7 @@ dest:
 
   GHCR:
     registry: ghcr.io
-    namespace: ${github.repository_owner}
+    namespace: ${GHCR_SPACE_NAME}
     flatten: false
 
 sources:
