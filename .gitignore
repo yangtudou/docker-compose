@@ -7,4 +7,6 @@ aliCR-toLocal.yaml
 
 # cli
 /registry-sync
+/registry-sync-linux-arm64
+registry-sync-linux-amd64
 registry-sync.exe
