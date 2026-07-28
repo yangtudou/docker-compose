@@ -1,12 +1,12 @@
 sync:
-  - ARC
+  - AliCR
 
 platform:
   # - linux/arm64
   - linux/amd64
 
 dest:
-  ARC:
+  AliCR:
     registry: ${ALIYUN_REGISTRY_DOMAIN}
     namespace: ${ALIYUN_REGISTRY_SPACE_NAME}
     flatten: true
