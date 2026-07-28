@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   sync:
-    name: main 分支
+    name: Registry Sync AliCR
     runs-on: ubuntu-latest
 
     steps:
@@ -48,9 +48,9 @@ jobs:
         uses: yyysay/registry-sync@main
         with:
           config: ./config.yaml
+          workers: 6
 
       # 清理
       - name: Cleanup
         if: always()
-        run: |
-          rm -f config.yaml
+        run: rm -f config.yaml
