@@ -26,10 +26,11 @@ jobs:
         env:
           ALIYUN_REGISTRY_SPACE_NAME: ${{ secrets.ALIYUN_REGISTRY_SPACE_NAME }}
           ALIYUN_REGISTRY_DOMAIN: ${{ secrets.ALIYUN_REGISTRY_DOMAIN }}
+          SYNC_CONFIG_TEMPLATE: toAliCR.yaml
         run: |
           set -euo pipefail
 
-          envsubst < toAliRC.yaml > config.yaml
+          envsubst < "${SYNC_CONFIG_TEMPLATE}" > config.yaml
 
           chmod 600 config.yaml
 
