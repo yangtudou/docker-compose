@@ -14,23 +14,26 @@ dest:
 sources:
   docker.io:
     images:
+      louislam/dockge: 1
+      louislam/uptime-kuma: 2
+      gdy666/lucky: v2
       library/registry: 3
       library/traefik: v3.7
       joxit/docker-registry-ui: main
-      gdy666/lucky: v2
-      louislam/dockge: 1
-      louislam/uptime-kuma: 2
+      tecnativa/docker-socket-proxy: master
+      # 以下省略了 latest
       cloudflare/cloudflared:
       metacubex/mihomo:
-      tecnativa/docker-socket-proxy: master
+      sigoden/dufs:
 
   ghcr.io:
     images:
-      finb/bark-server:
+      usememos/memos: 0.29.1 # iPhone app 支持的版本
       tailscale/tailscale: stable
+      sagernet/sing-box: [ latest, latest-testing ]
+      finb/bark-server:
       hacdias/webdav:
       dani-garcia/vaultwarden:
-      usememos/memos: 0.29.1
       jellyfin/jellyfin:
       userdocs/iperf3-static:
-      sagernet/sing-box: [ latest, latest-testing ]
+      
