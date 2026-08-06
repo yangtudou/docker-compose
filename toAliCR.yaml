@@ -30,11 +30,11 @@ sources:
     images:
       usememos/memos: 0.30.0 # iPhone app 支持的版本
       tailscale/tailscale: stable
-      sagernet/sing-box:
+      # sagernet/sing-box:
       finb/bark-server:
       hacdias/webdav:
       dani-garcia/vaultwarden:
       jellyfin/jellyfin:
       # userdocs/iperf3-static:
-      # zephyruso/zashboard:
+      zephyruso/zashboard:
       
