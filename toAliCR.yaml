@@ -36,4 +36,5 @@ sources:
       dani-garcia/vaultwarden:
       jellyfin/jellyfin:
       userdocs/iperf3-static:
+      zephyruso/zashboard:
       
