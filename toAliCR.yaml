@@ -30,7 +30,7 @@ sources:
     images:
       usememos/memos: 0.30.0 # iPhone app 支持的版本
       tailscale/tailscale: stable
-      sagernet/sing-box: [ latest, latest-testing ]
+      sagernet/sing-box:
       finb/bark-server:
       hacdias/webdav:
       dani-garcia/vaultwarden:
